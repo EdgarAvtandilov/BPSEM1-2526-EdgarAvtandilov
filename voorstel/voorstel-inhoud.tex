@@ -15,46 +15,36 @@
 \section{Inleiding}%
 \label{sec:inleiding}
 
-Waarover zal je bachelorproef gaan? Introduceer het thema en zorg dat volgende zaken zeker duidelijk aanwezig zijn:
-
-\begin{itemize}
-  \item kaderen thema
-  \item de doelgroep
-  \item de probleemstelling en (centrale) onderzoeksvraag
-  \item de onderzoeksdoelstelling
-\end{itemize}
-
-Denk er aan: een typische bachelorproef is \textit{toegepast onderzoek}, wat betekent dat je start vanuit een concrete probleemsituatie in bedrijfscontext, een \textbf{casus}. Het is belangrijk om je onderwerp goed af te bakenen: je gaat voor die \textit{ene specifieke probleemsituatie} op zoek naar een goede oplossing, op basis van de huidige kennis in het vakgebied.
-
-De doelgroep moet ook concreet en duidelijk zijn, dus geen algemene of vaag gedefinieerde groepen zoals \emph{bedrijven}, \emph{developers}, \emph{Vlamingen}, enz. Je richt je in elk geval op it-professionals, een bachelorproef is geen populariserende tekst. Eén specifiek bedrijf (die te maken hebben met een concrete probleemsituatie) is dus beter dan \emph{bedrijven} in het algemeen.
-
-Formuleer duidelijk de onderzoeksvraag! De begeleiders lezen nog steeds te veel voorstellen waarin we geen onderzoeksvraag terugvinden.
-
-Schrijf ook iets over de doelstelling. Wat zie je als het concrete eindresultaat van je onderzoek, naast de uitgeschreven scriptie? Is het een proof-of-concept, een rapport met aanbevelingen, \ldots Met welk eindresultaat kan je je bachelorproef als een succes beschouwen?
+In de bedrijfswereld van vandaag staat connectiviteit en beschikbaarheid centraal. Binnen deze context kan een kleine configuratiefout al snel grote gevolgen met zich mee brengen. De manuele configuratie van meerdere netwerktoestellen is een foutgevoelig en tijdsrovend proces, het kan namelijk uren duren om een geheel netwerk te configureren en elke configuratielijn is een nieuwe kans op een fout.
+Er is daarom nood aan een manier om het configuratieproces zowel tijdsbesparender te maken als een manier die alle toestellen consistent en foutloos kan configureren, een gepaste oplossing zou automatisatie zijn.
+Dit onderzoek zal deze uitdaging proberen aanpakken door het configuratieproces te automatiseren aan de hand van Ansible. Ansible stelt ons in staat een single source of truth (SSoT) te hebben in de vorm van de Ansible controller, wat ervoor zorgt dat alle configuraties centraal beheerd, consistent toegepast en eenvoudig reproduceerbaar zijn over alle netwerktoestellen.
+Naast de voordelen van een SSoT, helpt Ansible ook met het hele configuratieproces te versnellen door het een, deels, hands-off proces te maken.
+Het doel van deze proof-of-concept is bewijzen dat Ansible een gepaste manier is om netwerkconfiguratie sneller, consistenter, reproduceerbaar en schaalbaar te maken.
+Dit onderzoek is gericht op KMO's die vaker beschikken over ICT afdelingen met een beperkt aantal netwerkbeheerders die vaak beperkt zijn in hun tijd om een geheel netwerk toestel per toestel te (her)configureren.
 
 %---------- Stand van zaken ---------------------------------------------------
 
 \section{Literatuurstudie}%
 \label{sec:literatuurstudie}
 
-Hier beschrijf je de \emph{state-of-the-art} rondom je gekozen onderzoeksdomein, d.w.z.\ een inleidende, doorlopende tekst over het onderzoeksdomein van je bachelorproef. Je steunt daarbij heel sterk op de professionele \emph{vakliteratuur}, en niet zozeer op populariserende teksten voor een breed publiek. Wat is de huidige stand van zaken in dit domein, en wat zijn nog eventuele open vragen (die misschien de aanleiding waren tot je onderzoeksvraag!)?
-
-Je mag de titel van deze sectie ook aanpassen (literatuurstudie, stand van zaken, enz.). Zijn er al gelijkaardige onderzoeken gevoerd? Wat concluderen ze? Wat is het verschil met jouw onderzoek?
-
-Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld~\autocite{Hykes2013}! Denk zeker goed na welke werken je refereert en waarom.
-
-Draag zorg voor correcte literatuurverwijzingen! Een bronvermelding hoort thuis \emph{binnen} de zin waar je je op die bron baseert, dus niet er buiten! Maak meteen een verwijzing als je gebruik maakt van een bron. Doe dit dus \emph{niet} aan het einde van een lange paragraaf. Baseer nooit teveel aansluitende tekst op eenzelfde bron.
-
-Als je informatie over bronnen verzamelt in JabRef, zorg er dan voor dat alle nodige info aanwezig is om de bron terug te vinden (zoals uitvoerig besproken in de lessen Research Methods).
-
-% Voor literatuurverwijzingen zijn er twee belangrijke commando's:
-% \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
-%   geen onderdeel is van de zin.
-% \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
-%   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
-%   ...'')
-
-Je mag deze sectie nog verder onderverdelen in subsecties als dit de structuur van de tekst kan verduidelijken.
+ICT de ruggengraat van het bedrijfsleven noemen is geen toekomstvisie meer, maar de hedendaagse realiteit \autocite{OlalereAbiodun2023}. 
+Zo goed als elke organisatie vertrouwt op digitale infrastructuur om hun communicatie en dienstverlening efficiënt te laten verlopen.
+Een netwerk dat 24/7 beschikbaar is staat hierin centraal, maar wat als er tijdens de configuratie van het netwerk een fout wordt gemaakt die ervoor zorgt dat cruciale diensten offline worden gehaald?
+Om bedrijfscontinuïteit te garanderen is er dus nood aan een manier om het netwerk consistent en foutloos te kunnen configureren.
+Waarom automatiseren? Netwerken zijn doorheen de jaren een stuk complexer geworden. Waar vroeger een kleine hoeveelheid toestellen lokaal beheerd werden, beschikken organisaties vandaag over tientallen of honderden netwerktoestellen op verschillende locaties. 
+Tientallen toestellen manueel configureren is niet alleen een tijdsrovend proces, een reeks netwerktoestellen productieklaar maken kan al snel uren duren en het proces automatiseren kan dit verkorten naar slechts enkele minuten \autocite{Younes2024}.
+Naast de tijd die verloren wordt bij manuele configuratie is er nog een groot probleem: elke configuratielijn is een nieuwe kans op een menselijke fout. 
+Automatisatie is een mogelijke oplossing die al getoond heeft dat het aantal menselijke fouten die gemaakt worden aanzienlijk daalt \autocite{Diekmann_2015}.
+Hoewel de voordelen van automatisatie duidelijk en gekend zijn, blijven organisaties vaak vasthouden aan manuele configuratie. 
+De terughoudendheid van organisaties ligt voornamelijk bij een gebrek aan kennis over automatisatietools, angst voor verandering of de investering in tijd en middelen die nodig is om automatisatie te implementeren \autocite{EMAItential2021}.
+Een mogelijke manier om deze zorgen te overbruggen is een gebruiksvriendelijke, goed ondersteunde automatisatietool: Ansible.
+Ansible is een open-source automatisatietool, ontwikkeld door Red Hat, die gebruik maakt van een agentless architectuur.
+Dit betekent dat er geen aparte software op de netwerktoestellen hoeft te worden geïnstalleerd aangezien Ansible rechtstreeks met de netwerkapparatuur communiceert aan de hand van SSH of API’s. Configuraties worden beschreven in eenvoudige YAML-bestanden, playbooks, waarin de gewenste toestand van het netwerk wordt gedefinieerd.
+Deze declaratieve aanpak maakt het mogelijk om complexe configuraties herhaalbaar, consistent en foutloos uit te voeren, waarbij de Ansible controller met alle configuratiebestanden fungeert als een single source of truth (SSoT).
+Ansible biedt ook ondersteuning voor een breed assortiment aan netwerkapparatuur, waaronder Cisco waar dit onderzoek zich op gaat focussen, via Ansible Collections.
+Hierdoor kunnen KMO’s hun bestaande infrastructuur automatiseren zonder afhankelijk te zijn van één specifieke leverancier, wat bijdraagt aan flexibiliteit en schaalbaarheid \autocite{Cisco2023}.
+Naast de eerder genoemde voordelen biedt Ansible ook uitgebreide documentatie en een actieve community, wat het leerproces en de implementatie vergemakkelijkt alsook ondersteuning biedt bij implementatieproblemen.
+Dit onderzoek zal ingaan op hoe Ansible gebruikt kan worden in de configuratie van een netwerk binnen KMO's om menselijke fouten te verminderen, het configuratieproces te versnellen en de consistentie, reproduceerbaarheid en schaalbaarheid te vergroten.
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%
