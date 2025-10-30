@@ -15,12 +15,13 @@
 \section{Inleiding}%
 \label{sec:inleiding}
 
-In de bedrijfswereld van vandaag staat connectiviteit en beschikbaarheid centraal. Binnen deze context kan een kleine configuratiefout al snel grote gevolgen met zich mee brengen. De manuele configuratie van meerdere netwerktoestellen is een foutgevoelig en tijdsrovend proces, het kan namelijk uren duren om een geheel netwerk te configureren en elke configuratielijn is een nieuwe kans op een fout.
+In de bedrijfswereld van vandaag staat connectiviteit en beschikbaarheid centraal. Binnen deze context kan een kleine configuratiefout al snel grote gevolgen met zich mee brengen. De manuele configuratie van meerdere netwerktoestellen is een foutgevoelig en tijdrovend proces, het kan namelijk uren duren om een geheel netwerk te configureren en elke configuratielijn is een nieuwe kans op een fout.
 Er is daarom nood aan een manier om het configuratieproces zowel tijdsbesparender te maken als een manier die alle toestellen consistent en foutloos kan configureren, een gepaste oplossing zou automatisatie zijn.
 Dit onderzoek zal deze uitdaging proberen aanpakken door het configuratieproces te automatiseren aan de hand van Ansible. Ansible stelt ons in staat een single source of truth (SSoT) te hebben in de vorm van de Ansible controller, wat ervoor zorgt dat alle configuraties centraal beheerd, consistent toegepast en eenvoudig reproduceerbaar zijn over alle netwerktoestellen.
-Naast de voordelen van een SSoT, helpt Ansible ook met het hele configuratieproces te versnellen door het een, deels, hands-off proces te maken.
+Naast de voordelen van een SSoT, helpt Ansible ook het hele configuratieproces te versnellen door het een, deels, hands-off proces te maken.
+Deze elementen leiden naar de onderzoeksvraag \textit{in welke mate kan Ansible bijdragen aan een snellere, reproduceerbare en consistentere, schaalbare en foutloze netwerkconfiguratie binnen kmo's?}.
 Het doel van deze proof-of-concept is bewijzen dat Ansible een gepaste manier is om netwerkconfiguratie sneller, consistenter, reproduceerbaar en schaalbaar te maken.
-Dit onderzoek is gericht op KMO's die vaker beschikken over ICT afdelingen met een beperkt aantal netwerkbeheerders die vaak beperkt zijn in hun tijd om een geheel netwerk toestel per toestel te (her)configureren.
+Dit onderzoek is gericht op kmo's die vaker beschikken over ICT-afdelingen met een beperkt aantal netwerkbeheerders die vaak beperkt zijn in hun tijd om een geheel netwerk, toestel per toestel, te (her)configureren.
 
 %---------- Stand van zaken ---------------------------------------------------
 
@@ -32,43 +33,112 @@ Zo goed als elke organisatie vertrouwt op digitale infrastructuur om hun communi
 Een netwerk dat 24/7 beschikbaar is staat hierin centraal, maar wat als er tijdens de configuratie van het netwerk een fout wordt gemaakt die ervoor zorgt dat cruciale diensten offline worden gehaald?
 Om bedrijfscontinuïteit te garanderen is er dus nood aan een manier om het netwerk consistent en foutloos te kunnen configureren.
 Waarom automatiseren? Netwerken zijn doorheen de jaren een stuk complexer geworden. Waar vroeger een kleine hoeveelheid toestellen lokaal beheerd werden, beschikken organisaties vandaag over tientallen of honderden netwerktoestellen op verschillende locaties. 
-Tientallen toestellen manueel configureren is niet alleen een tijdsrovend proces, een reeks netwerktoestellen productieklaar maken kan al snel uren duren en het proces automatiseren kan dit verkorten naar slechts enkele minuten \autocite{Younes2024}.
+Tientallen toestellen manueel configureren is niet alleen een tijdrovend proces, een reeks netwerktoestellen productieklaar maken kan al snel uren duren en het proces automatiseren kan dit verkorten naar slechts enkele minuten \autocite{Younes2024}.
 Naast de tijd die verloren wordt bij manuele configuratie is er nog een groot probleem: elke configuratielijn is een nieuwe kans op een menselijke fout. 
 Automatisatie is een mogelijke oplossing die al getoond heeft dat het aantal menselijke fouten die gemaakt worden aanzienlijk daalt \autocite{Diekmann_2015}.
 Hoewel de voordelen van automatisatie duidelijk en gekend zijn, blijven organisaties vaak vasthouden aan manuele configuratie. 
 De terughoudendheid van organisaties ligt voornamelijk bij een gebrek aan kennis over automatisatietools, angst voor verandering of de investering in tijd en middelen die nodig is om automatisatie te implementeren \autocite{EMAItential2021}.
 Een mogelijke manier om deze zorgen te overbruggen is een gebruiksvriendelijke, goed ondersteunde automatisatietool: Ansible.
 Ansible is een open-source automatisatietool, ontwikkeld door Red Hat, die gebruik maakt van een agentless architectuur.
-Dit betekent dat er geen aparte software op de netwerktoestellen hoeft te worden geïnstalleerd aangezien Ansible rechtstreeks met de netwerkapparatuur communiceert aan de hand van SSH of API’s. Configuraties worden beschreven in eenvoudige YAML-bestanden, playbooks, waarin de gewenste toestand van het netwerk wordt gedefinieerd.
-Deze declaratieve aanpak maakt het mogelijk om complexe configuraties herhaalbaar, consistent en foutloos uit te voeren, waarbij de Ansible controller met alle configuratiebestanden fungeert als een single source of truth (SSoT).
-Ansible biedt ook ondersteuning voor een breed assortiment aan netwerkapparatuur, waaronder Cisco waar dit onderzoek zich op gaat focussen, via Ansible Collections.
-Hierdoor kunnen KMO’s hun bestaande infrastructuur automatiseren zonder afhankelijk te zijn van één specifieke leverancier, wat bijdraagt aan flexibiliteit en schaalbaarheid \autocite{Cisco2023}.
+Dit betekent dat er geen aparte software op de netwerktoestellen hoeft te worden geïnstalleerd aangezien Ansible rechtstreeks met de netwerkapparatuur communiceert aan de hand van SSH of API's. Configuraties worden beschreven in eenvoudige YAML-bestanden, playbooks, waarin de gewenste toestand van het netwerk wordt gedefinieerd.
+Deze declaratieve aanpak maakt het mogelijk om complexe configuraties herhaalbaar, consistent en foutloos uit te voeren, waarbij de Ansible controller (een server of computer vanwaar alle Ansible-taken worden uitgevoerd en beheerd) met alle configuratiebestanden fungeert als een single source of truth (SSoT).
+Ansible biedt ook ondersteuning voor een breed assortiment aan netwerkapparatuur, waaronder Cisco, waarop dit onderzoek zich gaat focussen, via Ansible Collections.
+Hierdoor kunnen kmo's hun bestaande infrastructuur automatiseren zonder afhankelijk te zijn van één specifieke leverancier, wat bijdraagt aan flexibiliteit en schaalbaarheid \autocite{Cisco2022}.
 Naast de eerder genoemde voordelen biedt Ansible ook uitgebreide documentatie en een actieve community, wat het leerproces en de implementatie vergemakkelijkt alsook ondersteuning biedt bij implementatieproblemen.
-Dit onderzoek zal ingaan op hoe Ansible gebruikt kan worden in de configuratie van een netwerk binnen KMO's om menselijke fouten te verminderen, het configuratieproces te versnellen en de consistentie, reproduceerbaarheid en schaalbaarheid te vergroten.
+Dit onderzoek zal ingaan op hoe Ansible gebruikt kan worden in de configuratie van een netwerk binnen kmo's om menselijke fouten te verminderen, het configuratieproces te versnellen en de consistentie, reproduceerbaarheid en schaalbaarheid te vergroten.
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%
 \label{sec:methodologie}
 
-Hier beschrijf je hoe je van plan bent het onderzoek te voeren. Welke onderzoekstechniek ga je toepassen om elk van je onderzoeksvragen te beantwoorden? Gebruik je hiervoor literatuurstudie, interviews met belanghebbenden (bv.~voor requirements-analyse), experimenten, simulaties, vergelijkende studie, risico-analyse, PoC, \ldots?
+Om de proof-of-concept te realiseren, wordt een kwantitatieve en experimentele onderzoeksmethode toegepast. Deze methodologie bestaat uit vier hoofdfasen: voorbereiding, ontwerp, implementatie en evaluatie.
 
-Valt je onderwerp onder één van de typische soorten bachelorproeven die besproken zijn in de lessen Research Methods (bv.\ vergelijkende studie of risico-analyse)? Zorg er dan ook voor dat we duidelijk de verschillende stappen terug vinden die we verwachten in dit soort onderzoek!
+\subsection{Voorbereidingsfase}
+In de voorbereidingsfase wordt de bestaande netwerkarchitectuur van een typische kmo bestudeerd om een realistische testomgeving te kunnen opzetten. Het einddoel van deze fase is het volgende in kaart brengen:
+\begin{itemize}
+  \item Welke netwerktoestellen (zoals switches en routers) zullen gebruikt worden.
+  \item Welke configuratieparameters representatief zijn voor een netwerktoestel binnen een kmo (zoals VLAN's, IP-adressering en routing).
+  \item Welke handelingen netwerkbeheerders typisch manueel uitvoeren.
+\end{itemize}
+Op basis van deze analyse wordt een representatieve testomgeving uitgewerkt die de netwerkstructuur van een kmo nabootst. Dit gebeurt in een virtuele omgeving om risico's op productieomgevingen te vermijden.
 
-Vermijd onderzoekstechnieken die geen objectieve, meetbare resultaten kunnen opleveren. Enquêtes, bijvoorbeeld, zijn voor een bachelorproef informatica meestal \textbf{niet geschikt}. De antwoorden zijn eerder meningen dan feiten en in de praktijk blijkt het ook bijzonder moeilijk om voldoende respondenten te vinden. Studenten die een enquête willen voeren, hebben meestal ook geen goede definitie van de populatie, waardoor ook niet kan aangetoond worden dat eventuele resultaten representatief zijn.
+\subsection{Ontwerpfase}
+In deze fase wordt het automatisatieconcept ontworpen aan de hand van Ansible. Hierbij worden:
+\begin{itemize}
+  \item Een Ansible controller opgezet als centraal beheerpunt.
+  \item Playbooks opgesteld die de gewenste netwerkconfiguratie beschrijven in YAML-formaat.
+  \item Inventarissen aangemaakt die de netwerktoestellen definiëren en groeperen.
+\end{itemize}
+Daarnaast wordt het concept van een single source of truth (SSoT) geïntegreerd door alle configuratiebestanden centraal te beheren op de controller. Dit ontwerp garandeert consistentie en herhaalbaarheid over alle toestellen.
 
-Uit dit onderdeel moet duidelijk naar voor komen dat je bachelorproef ook technisch voldoen\-de diepgang zal bevatten. Het zou niet kloppen als een bachelorproef informatica ook door bv.\ een student marketing zou kunnen uitgevoerd worden.
+\subsection{Implementatiefase}
+De implementatiefase richt zich op het toepassen en testen van de Ansible-configuraties. De volgende stappen worden uitgevoerd:
+\begin{enumerate}
+  \item Configuratie van virtuele netwerktoestellen (Cisco IOS in GNS3).
+  \item Verbinding tussen de Ansible controller en de netwerktoestellen via SSH.
+  \item Uitvoering van playbooks voor basisconfiguratie (hostname, interfaces, VLAN's, routing, etc).
+  \item Herhaalde uitvoering van dezelfde playbooks om de reproduceerbaarheid te testen.
+\end{enumerate}
+Tijdens deze fase wordt gemeten hoeveel tijd nodig is voor configuratie met en zonder automatisatie, en wordt het aantal fouten geregistreerd om de impact van automatisatie te evalueren.
 
-Je beschrijft ook al welke tools (hardware, software, diensten, \ldots) je denkt hiervoor te gebruiken of te ontwikkelen.
+\subsection{Evaluatiefase}
+Tot slot wordt het proof-of-concept geëvalueerd op basis van meetbare criteria:
+\begin{itemize}
+  \item \textbf{Tijdswinst}: vergelijking van manuele versus geautomatiseerde configuratie.
+  \item \textbf{Reproduceerbaarheid en Consistentie}: mogelijkheid om dezelfde configuratie meerdere keren zonder afwijkingen toe te passen.
+  \item \textbf{Schaalbaarheid}: evaluatie van de prestaties bij meerdere netwerktoestellen.
+  \item \textbf{Foutvermindering}: Worden er minder fouten gemaakt bij een configuratie met behulp van Ansible.
 
-Probeer ook een tijdschatting te maken. Hoe lang zal je met elke fase van je onderzoek bezig zijn en wat zijn de concrete \emph{deliverables} in elke fase?
+\end{itemize}
+De resultaten van deze evaluatie dienen om te bepalen of Ansible effectief een haalbare en efficiënte oplossing biedt voor netwerkconfiguratie binnen kmo's.
+
+\subsection{Tools en technologieën}
+Voor dit onderzoek worden de volgende tools en technologieën gebruikt:
+\begin{itemize}
+  \item \textbf{Ansible}: automatisatietool voor configuratiebeheer.
+  \item \textbf{Cisco IOS} (virtueel): voor representatieve netwerktoestellen.
+  \item \textbf{GNS3}: simulatieplatform voor netwerkarchitecturen.
+  \item \textbf{Python en YAML}: voor het schrijven en aanpassen van playbooks.
+\end{itemize}
+Deze combinatie van technologieën maakt het mogelijk om het volledige configuratieproces gecontroleerd, herhaalbaar en meetbaar uit te voeren.
+
 
 %---------- Verwachte resultaten ----------------------------------------------
 \section{Verwacht resultaat, conclusie}%
 \label{sec:verwachte_resultaten}
 
-Hier beschrijf je welke resultaten je verwacht. Als je metingen en simulaties uitvoert, kan je hier al mock-ups maken van de grafieken samen met de verwachte conclusies. Benoem zeker al je assen en de onderdelen van de grafiek die je gaat gebruiken. Dit zorgt ervoor dat je concreet weet welk soort data je moet verzamelen en hoe je die moet meten.
+Het doel van dit onderzoek is om aan te tonen dat netwerkconfiguratie automatiseren met Ansible leidt tot een snellere, consistentere en meer schaalbare manier van configureren waarbij minder fouten worden gemaakt in vergelijking met traditionele, manuele configuratie.
+De verwachte resultaten worden opgesplitst in vier categorieën: tijdswinst, reproduceerbaarheid en consistentie, schaalbaarheid en foutvermindering.
 
-Wat heeft de doelgroep van je onderzoek aan het resultaat? Op welke manier zorgt jouw bachelorproef voor een meerwaarde?
+\subsection{Tijdswinst}
 
-Hier beschrijf je wat je verwacht uit je onderzoek, met de motivatie waarom. Het is \textbf{niet} erg indien uit je onderzoek andere resultaten en conclusies vloeien dan dat je hier beschrijft: het is dan juist interessant om te onderzoeken waarom jouw hypothesen niet overeenkomen met de resultaten.
+Ansible playbooks stellen netwerkbeheerders in staat de configuratietijd aanzienlijk te verminderen.
+Een netwerk configureren op de traditionele manier houdt in dat de netwerkbeheerder elk commando op elk toestel manueel moet invoeren, Ansible daarentegen voert de configuratie parallel uit op alle toestellen.
+Door de configuratie parallel uit te voeren wordt er een tijdwinst van 60-80\% verwacht, afhankelijk van de grootte van het netwerk en de complexiteit van de configuratie.
+De grootste tijdswinst zal echter te vinden zijn bij herconfiguratie of aanpassingen, doordat alles centraal beheerd wordt in de inventaris van de controller. 
+Aangezien de configuratie, zoals eerder vernoemd, parallel verloopt en op basis van de controller als SSoT, moet een wijziging in adressering, routing of VLAN's niet handmatig op elk toestel worden uitgevoerd.
+De netwerkbeheerder moet enkel de gewenste aanpassing doorvoeren in playbooks en inventarisbestanden en de playbooks uitvoeren.
+Ansible zorgt er vervolgens voor dat deze wijziging automatisch en consistent wordt toegepast op alle relevante toestellen.
 
+\subsection{Reproduceerbaarheid en Consistentie}
+
+Netwerkconfiguratie consistent houden is nog een voordeel dat Ansible met zich meebrengt. 
+De declaratieve aanpak houdt in dat alle toestellen en configuraties in inventarisbestanden en playbooks worden verwerkt.
+Deze aanpak brengt het voordeel van consistentie met zich mee aangezien alles op dezelfde manier wordt geconfigureerd.
+Ook worden configuraties die afhankelijk zijn van verwijzingen altijd meegenomen vanuit de inventarisbestanden en playbooks.
+Deze voordelen zijn vooral merkbaar bij aanpassingen of uitbreidingen van het netwerk.  
+Zo kan bijvoorbeeld een routingtabel eenvoudig worden aangepast of aangevuld op basis van de inventaris, zonder dat er nog verwijzingen bestaan naar servers die een nieuw IP-adres hebben gekregen 
+of hoeft bij de toevoeging van een nieuwe router niet langer op elke bestaande router handmatig een extra route worden geconfigureerd — Ansible past de wijziging automatisch toe op alle relevante toestellen.
+
+\subsection{Schaalbaarheid}
+Naarmate het aantal netwerktoestellen toeneemt, blijft de uitvoeringstijd grotendeels constant, aangezien de configuratie parallel kan worden uitgerold.  
+Het verwachte resultaat is dat de complexiteit van het netwerk slechts een beperkte invloed heeft op de configuratietijd, wat aantoont dat de oplossing schaalbaar is naar grotere bedrijfsnetwerken.
+
+\subsection{Foutvermindering}
+Omdat alle configuraties in één centraal beheerd bestand (de Ansible controller) worden opgeslagen en uitgerold, wordt verwacht dat het aantal menselijke fouten sterk afneemt.  
+Configuraties die met Ansible worden uitgerold zijn bovendien herhaalbaar en identiek, wat menselijke typfouten of inconsistenties uitsluit.  
+Het verwachte resultaat is een daling van het aantal configuratiefouten tot nagenoeg nul, aangezien elke wijziging via hetzelfde playbook wordt toegepast op alle toestellen.
+
+\subsection{Conclusie}
+Ansible is een makkelijke en goedkope manier om netwerkconfiguratie sneller, reproduceerbaar, consistenter en meer schaalbaar te maken, alsook het aantal fouten dat gemaakt wordt bij de configuratie drastisch te verminderen.
+Het is een mature technologie met veel documentatie en een grote community wat ervoor zorgt dat het schrijven van playbooks en de implementatie ervan een laagdrempelige stap naar automatisatie is.

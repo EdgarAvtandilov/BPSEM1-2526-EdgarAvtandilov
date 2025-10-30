@@ -23,7 +23,7 @@
 \academicyear{2025-2026} % TODO: pas het academiejaar aan
 
 % TODO: Werktitel
-\title{Proof-of-concept: Automatisatie van netwerkconfiguratie met Ansible op basis van een single source of truth}
+\title{Automatisatie van netwerkconfiguratie met Ansible: een proof-of-concept voor snellere, consistente en schaalbare configuratie}
 
 % TODO: Studentnaam en emailadres invullen
 \author{Edgar Avtandilov}
@@ -36,7 +36,7 @@
 % \email{yasmine.alaoui@student.hogent.be}
 
 % TODO: Geef de co-promotor op
-\supervisor[Co-promotor]{S. Beekman (Synalco, \href{mailto:sigrid.beekman@synalco.be}{sigrid.beekman@synalco.be})}
+\supervisor[Co-promotor]{Alex Reintjes (Robovision NV, \href{mailto:alexreintjes@hotmail.com}{alexreintjes@hotmail.com})}
 
 % Binnen welke specialisatierichting uit 3TI situeert dit onderzoek zich?
 % Kies uit deze lijst:
@@ -55,7 +55,16 @@
 \begin{document}
 
 \begin{abstract}
-  Hier schrijf je de samenvatting van je voorstel, als een doorlopende tekst van één paragraaf. Let op: dit is geen inleiding, maar een samenvattende tekst van heel je voorstel met inleiding (voorstelling, kaderen thema), probleemstelling en centrale onderzoeksvraag, onderzoeksdoelstelling (wat zie je als het concrete resultaat van je bachelorproef?), voorgestelde methodologie, verwachte resultaten en meerwaarde van dit onderzoek (wat heeft de doelgroep aan het resultaat?).
+  In de bedrijfswereld staat connectiviteit en beschikbaarheid vandaag de dag centraal, manuele configuratie van netwerktoestellen is nog steeds een courante praktijk en vormt een grote uitdaging voor kmo's. 
+  De manuele configuratie van netwerktoestellen is niet alleen een tijdrovend proces, maar ook foutgevoelig aangezien elk commando een nieuwe kans biedt op een menselijke fout. 
+  Dit onderzoek richt zich op netwerkconfiguraties automatiseren met Ansible, een open-source automatisatietool die in dit onderzoek als single source of truth (SSoT) wordt gebruikt om configuraties centraal, consistent en reproduceerbaar te maken.
+  Door middel van een proof-of-concept in een virtuele kmo-netwerkomgeving wordt onderzocht hoe Ansible kan helpen met snellere, consistentere, schaalbare en foutloze netwerkconfiguratie. 
+  Het onderzoek verloopt in vier fasen: voorbereiding, ontwerp, implementatie en evaluatie. 
+  Tijdens de implementatie worden virtuele Cisco-netwerktoestellen, IOSv op GNS3, geconfigureerd aan de hand van Ansible.
+  Vervolgens worden de resultaten geëvalueerd en wordt er gekeken hoe de vraag \textit{in welke mate kan Ansible bijdragen tot een snellere, reproduceerbare en consistentere, schaalbare en foutloze netwerkconfiguratie binnen kmo's?} kan worden beantwoord.
+  De verwachte resultaten tonen aan dat deze manier van automatiseren de configuratietijd met 60-80\% vermindert, de consistentie verhoogt en het aantal menselijke fouten zo goed als elimineert.
+  Bovendien blijft de uitvoeringstijd grotendeels constant, ook bij een groeiend aantal toestellen, wat de schaalbaarheid van de oplossing aantoont.
+  Tot slot, Ansible biedt een laagdrempelige, kostenefficiënte en betrouwbare manier voor kmo's die hun netwerkbeheer willen optimaliseren aan de hand van automatisatie, zonder nood aan complexe infrastructuuraanpassingen, lange uren voor hun netwerkbeheerders of dure, gespecialiseerde software.
 \end{abstract}
 
 \tableofcontents
