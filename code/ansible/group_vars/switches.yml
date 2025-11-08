@@ -1,0 +1,12 @@
+vlans:
+  - { id: 10, name: HR }
+  - { id: 20, name: IT }
+  - { id: 30, name: Guest }
+  - { id: 99, name: Management }
+trunk:
+  name: GigabitEthernet0/1
+  allowed: "10,20,30,99"
+access_ports:
+  - { name: GigabitEthernet0/2, vlan: 10 }
+  - { name: GigabitEthernet0/3, vlan: 20 }
+  - { name: GigabitEthernet0/4, vlan: 30 }

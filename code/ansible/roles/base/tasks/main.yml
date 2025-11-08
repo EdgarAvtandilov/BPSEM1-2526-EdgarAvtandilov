@@ -1,0 +1,24 @@
+- name: Basis (hostname, domain, banner, users)
+  cisco.ios.ios_config:
+    lines:
+      - "hostname {{ inventory_hostname }}"
+      - "ip domain-name POCBP.local"
+      - "service password-encryption"
+      - "username ansible privilege 15 secret {{ vault_login_password }}"
+      - "enable secret {{ vault_enable_password }}"
+      - |
+        banner motd ^C
+        *** Toegang uitsluitend voor geautoriseerde gebruikers ***
+        ^C
+
+- name: SSH v2
+  cisco.ios.ios_config:
+    lines: [ "ip ssh version 2" ]
+
+- name: Logging & NTP
+  cisco.ios.ios_config:
+    lines:
+      - "service timestamps log datetime msec"
+      - "logging host {{ logging_host }}"
+      - "logging trap informational"
+      - "ntp server {{ ntp_server }} prefer"

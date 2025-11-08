@@ -1,0 +1,6 @@
+ospf_process: 1
+ospf_router_id: "{{ router_id | default(None) }}"
+ospf_networks:
+  - { prefix: "10.10.10.0", wildcard: "0.0.0.3", area: 0 }
+  - { prefix: "10.10.20.0", wildcard: "0.0.0.3", area: 0 }
+  - { prefix: "10.10.30.0", wildcard: "0.0.0.3", area: 0 }

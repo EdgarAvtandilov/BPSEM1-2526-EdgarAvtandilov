@@ -1,0 +1,5 @@
+router ospf {{ ospf_process }}
+{% if ospf_router_id %} router-id {{ ospf_router_id }}{% endif %}
+{% for n in ospf_networks %}
+ network {{ n.prefix }} {{ n.wildcard }} area {{ n.area }}
+{% endfor %}

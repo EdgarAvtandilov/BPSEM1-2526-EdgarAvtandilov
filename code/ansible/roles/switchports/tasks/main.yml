@@ -1,0 +1,12 @@
+- name: Trunk uplink
+  cisco.ios.ios_l2_interfaces:
+    config:
+      - name: "{{ trunk.name }}"
+        mode: trunk
+        trunk: { allowed_vlans: "{{ trunk.allowed }}" }
+    state: merged
+
+- name: Accesspoorten
+  cisco.ios.ios_l2_interfaces:
+    config: "{{ access_ports | map('combine', {'mode':'access'}) | list }}"
+    state: merged

@@ -1,0 +1,24 @@
+---
+- name: Configure routers
+  hosts: routers
+  gather_facts: no
+  roles:
+    - base
+    - interfaces
+    - mgmt
+    - ospf
+    - nat
+
+- name: Configure switches
+  hosts: switches
+  gather_facts: no
+  roles:
+    - base
+    - vlans
+    - switchports
+
+  tasks:
+    - name: Forceer opslaan van running-config
+      cisco.ios.ios_command:
+        commands:
+          - write memory
