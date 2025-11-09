@@ -20,7 +20,7 @@ exit
 !
 interface GigabitEthernet0/1
  description Link naar GentUplink (LAN)
- ip address 192.168.10.254 255.255.255.0
+ ip address 192.168.72.11 255.255.255.0
  no shutdown
 exit
 !
@@ -31,7 +31,7 @@ router ospf 1
  network 192.168.10.0 0.0.0.255 area 0
 exit
 !
-! ---------- (OPTIONEEL) DEFAULT ROUTE NAAR COMPANY ----------
+! ---------- DEFAULT ROUTE NAAR COMPANY ----------
 ip route 0.0.0.0 0.0.0.0 10.10.10.1
 !
 ! ---------- LOGGING & NTP ----------

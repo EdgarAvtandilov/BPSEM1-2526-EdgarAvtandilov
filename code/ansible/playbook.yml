@@ -1,6 +1,6 @@
 ---
-- name: Configure routers
-  hosts: routers
+- name: Configure CompanyRouter
+  hosts: CompanyRouter
   gather_facts: no
   roles:
     - base
@@ -8,6 +8,15 @@
     - mgmt
     - ospf
     - nat
+
+- name: Configure site routers
+  hosts: GentRouter, AntwerpenRouter, BrusselRouter
+  gather_facts: no
+  roles:
+    - base
+    - interfaces
+    - mgmt
+    - ospf
 
 - name: Configure switches
   hosts: switches
