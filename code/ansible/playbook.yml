@@ -1,33 +1,41 @@
 ---
-- name: Configure CompanyRouter
+- name: Configureer companyrouter
   hosts: CompanyRouter
   gather_facts: no
   roles:
     - base
-    - interfaces
-    - mgmt
-    - ospf
-    - nat
+    - { role: interfaces, when: interfaces is defined }
+    - { role: ospf, when: "'routers' in group_names" }
+    - { role: nat, when: role_nat | default(false) }
+    - { role: vlans, when: "'switches' in group_names" }
+    - { role: switchports, when: "'switches' in group_names" }
 
-- name: Configure site routers
+- name: Configureer site routers
   hosts: GentRouter, AntwerpenRouter, BrusselRouter
   gather_facts: no
+  strategy: free
   roles:
     - base
-    - interfaces
-    - mgmt
-    - ospf
+    - { role: interfaces, when: interfaces is defined }
+    - { role: ospf, when: "'routers' in group_names" }
+    - { role: nat, when: role_nat | default(false) }
+    - { role: vlans, when: "'switches' in group_names" }
+    - { role: switchports, when: "'switches' in group_names" }
 
-- name: Configure switches
+- name: Configureer switches
   hosts: switches
   gather_facts: no
+  strategy: free
   roles:
     - base
-    - vlans
-    - switchports
+    - { role: interfaces, when: interfaces is defined }
+    - { role: ospf, when: "'routers' in group_names" }
+    - { role: nat, when: role_nat | default(false) }
+    - { role: vlans, when: "'switches' in group_names" }
+    - { role: switchports, when: "'switches' in group_names" }
 
-  tasks:
-    - name: Forceer opslaan van running-config
-      cisco.ios.ios_command:
-        commands:
-          - write memory
+  post_tasks:
+    - name: Save configuration once at the end
+      cisco.ios.ios_config:
+        save_when: always
+      changed_when: false

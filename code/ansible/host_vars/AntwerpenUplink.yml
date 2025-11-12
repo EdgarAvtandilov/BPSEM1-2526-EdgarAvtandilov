@@ -1,0 +1,17 @@
+interfaces:
+  - name: GigabitEthernet0/0
+    description: Verdieping 1 Antwerpen
+    ipv4:
+      - address: 192.168.20.10/24
+  - name: GigabitEthernet0/1
+    description: Verdieping 2 Antwerpen
+    ipv4:
+      - address: 192.168.20.20/24
+  - name: GigabitEthernet0/2
+    description: Verdieping 3 Antwerpen
+    ipv4:
+      - address: 192.168.20.30/24
+  - name: GigabitEthernet0/3
+    description: Link naar Router
+    ipv4:
+      - address: 192.168.20.5/24

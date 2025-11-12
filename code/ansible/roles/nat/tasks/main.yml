@@ -1,38 +1,34 @@
 ---
-- name: Ensure ACL for inside subnet exists
-  cisco.ios.ios_config:
-    lines:
-      - "access-list 10 permit 192.168.72.0 0.0.0.255"
+- name: Configure NAT ACLs
+  cisco.ios.ios_acls:
+    config: "{{ nat_acls }}"
+    state: merged
+  when: role_nat | default(false)
 
-- name: Mark inside/outside on interfaces
+- name: Configure NAT inside interface
   cisco.ios.ios_config:
     lines:
-      - "interface GigabitEthernet0/3"
-      - " ip nat inside"
-      - "interface GigabitEthernet0/0"
-      - " ip nat outside"
-      - "interface GigabitEthernet0/1"
-      - " ip nat outside"
-      - "interface GigabitEthernet0/2"
-      - " ip nat outside"
+      - ip nat inside
+    parents: "interface {{ nat_inside }}"
+  when: role_nat | default(false)
+
+- name: Configure NAT outside interfaces
+  cisco.ios.ios_config:
+    lines:
+      - ip nat outside
+    parents: "interface {{ item }}"
+  loop: "{{ nat_outside }}"
+  when: role_nat | default(false)
+
+- name: Configure NAT overload (PAT) rules
+  cisco.ios.ios_config:
+    lines:
+      - ip nat inside source list NAT_GENT interface GigabitEthernet0/0 overload
+      - ip nat inside source list NAT_ANT interface GigabitEthernet0/1 overload
+      - ip nat inside source list NAT_BRU interface GigabitEthernet0/2 overload
+  when: role_nat | default(false)
+
+- name: Save configuration
+  cisco.ios.ios_config:
     save_when: modified
-
-# 3) Extended ACL’s per site
-- name: ACLs voor NAT per site
-  cisco.ios.ios_config:
-    lines:
-      - "ip access-list extended NAT_GENT"
-      - " permit ip 192.168.72.0 0.0.0.255 10.10.10.0 0.0.0.3"
-      - "ip access-list extended NAT_ANT"
-      - " permit ip 192.168.72.0 0.0.0.255 10.10.20.0 0.0.0.3"
-      - "ip access-list extended NAT_BRU"
-      - " permit ip 192.168.72.0 0.0.0.255 10.10.30.0 0.0.0.3"
-
-# 4) NAT-regels per uplink
-- name: PAT per uplink (Gent/Antwerpen/Brussel)
-  cisco.ios.ios_config:
-    lines:
-      - "ip nat inside source list NAT_GENT interface GigabitEthernet0/0 overload"
-      - "ip nat inside source list NAT_ANT  interface GigabitEthernet0/1 overload"
-      - "ip nat inside source list NAT_BRU  interface GigabitEthernet0/2 overload"
-    save_when: modified
+  when: role_nat | default(false)

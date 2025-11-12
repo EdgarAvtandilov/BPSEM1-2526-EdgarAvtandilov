@@ -1,0 +1,17 @@
+interfaces:
+  - name: GigabitEthernet0/0
+    description: Verdieping 1 Gent
+    ipv4:
+      - address: 192.168.10.10/24
+  - name: GigabitEthernet0/1
+    description: Verdieping 2 Gent
+    ipv4:
+      - address: 192.168.10.20/24
+  - name: GigabitEthernet0/2
+    description: Verdieping 3 Gent
+    ipv4:
+      - address: 192.168.10.30/24
+  - name: GigabitEthernet0/3
+    description: Link naar Router
+    ipv4:
+      - address: 192.168.10.5/24

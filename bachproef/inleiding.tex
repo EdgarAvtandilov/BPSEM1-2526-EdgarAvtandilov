@@ -25,12 +25,36 @@ Uit je probleemstelling moet duidelijk zijn dat je onderzoek een meerwaarde heef
 \section{\IfLanguageName{dutch}{Onderzoeksvraag}{Research question}}%
 \label{sec:onderzoeksvraag}
 
-Wees zo concreet mogelijk bij het formuleren van je onderzoeksvraag. Een onderzoeksvraag is trouwens iets waar nog niemand op dit moment een antwoord heeft (voor zover je kan nagaan). Het opzoeken van bestaande informatie (bv. ``welke tools bestaan er voor deze toepassing?'') is dus geen onderzoeksvraag. Je kan de onderzoeksvraag verder specifiëren in deelvragen. Bv.~als je onderzoek gaat over performantiemetingen, dan 
+In dit onderzoek wordt onderzocht in welke mate Ansible gebruikt kan worden om netwerkconfiguratie sneller, reproduceerbaar en consistent, schaalbaar en foutloos te maken.
+Om deze vraag specifiek te kunnen beantwoorden wordt gekeken naar de volgende deelvragen:
+\begin{itemize}
+  \item Hoeveel sneller is een geautomatiseerde configuratie in vergelijking met een manuele configuratie van het netwerk?
+
+  \item Blijft de configuratie van de netwerktoestellen consistent bij het heruitvoeren van de Ansible-playbooks?
+
+  \item Is configuratie aan de hand van Ansible even snel bij een klein netwerk als bij een middelgroot netwerk?
+  
+  \item Worden minder fouten die connectiviteit verbreken gemaakt bij een geautomatiseerde configuratie vergeleken met de traditionele manier van configureren?
+\end{itemize}
 
 \section{\IfLanguageName{dutch}{Onderzoeksdoelstelling}{Research objective}}%
 \label{sec:onderzoeksdoelstelling}
 
-Wat is het beoogde resultaat van je bachelorproef? Wat zijn de criteria voor succes? Beschrijf die zo concreet mogelijk. Gaat het bv.\ om een proof-of-concept, een prototype, een verslag met aanbevelingen, een vergelijkende studie, enz.
+Deze bachelorproef heeft als doel een proof-of-concept realiseren dat de meerwaarde van netwerkautomatisatie met Ansible binnen een bedrijfscontext aantoont.
+Concreet wordt een netwerktopologie opgezet op basis van een gemiddeld kmo-netwerk in GNS3. Het netwerk bestaat uit een centrale bedrijfsrouter en 3 sites, elk met een router en meerdere switches, waarop configuratie- en beheerhandelingen geautomatiseerd worden uitgevoerd via Ansible-playbooks.
+
+Het project is succesvol wanneer:
+\begin{itemize}
+  \item het gehele netwerk geautomatiseerd configureren sneller is dan het netwerk manueel te configureren ;
+  
+  \item de Ansible-playbooks foutloos configuraties kunnen toepassen op alle netwerkapparaten ;
+
+  \item de configuraties consistent en reproduceerbaar zijn;
+
+  \item de beheerder taken zoals interface-configuratie, routing en NAT kan uitvoeren zonder manuele CLI-invoer;
+
+  \item fouten die connectiviteit onderbreken .
+\end{itemize}
 
 \section{\IfLanguageName{dutch}{Opzet van deze bachelorproef}{Structure of this bachelor thesis}}%
 \label{sec:opzet-bachelorproef}

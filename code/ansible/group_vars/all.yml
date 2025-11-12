@@ -5,9 +5,10 @@ ansible_password: "Ansible123"
 ansible_become: yes
 ansible_become_method: enable
 ansible_become_password: "C0mp@ny123"
-
 vault_login_password: "Ansible123"
 vault_enable_password: "C0mp@ny123"
-
+domain_name: POCBP.local
 logging_host: 192.168.72.1
 ntp_server: 192.168.72.1
+banner_motd: |
+  *** Toegang uitsluitend voor geautoriseerde gebruikers ***
