@@ -5,22 +5,38 @@
 \chapter{\IfLanguageName{dutch}{Inleiding}{Introduction}}%
 \label{ch:inleiding}
 
-De inleiding moet de lezer net genoeg informatie verschaffen om het onderwerp te begrijpen en in te zien waarom de onderzoeksvraag de moeite waard is om te onderzoeken. In de inleiding ga je literatuurverwijzingen beperken, zodat de tekst vlot leesbaar blijft. Je kan de inleiding verder onderverdelen in secties als dit de tekst verduidelijkt. Zaken die aan bod kunnen komen in de inleiding~\autocite{Pollefliet2011}:
+In moderne bedrijfsnetwerken staat connectiviteit, beschikbaarheid en consistentie centraal. 
+Naarmate ICT-infrastructuur groeit en complexer wordt, neemt ook de beheerslast toe. 
+Netwerkbeheerders worden geconfronteerd met een toenemende hoeveelheid configuratiewijzigingen die manueel in de command line interface (CLI) uitgevoerd moeten worden op routers, switches en andere netwerkapparaten. 
+In de CLI werken is niet alleen tijdrovend, maar ook foutgevoelig. 
+Een klein typefoutje kan immers leiden tot downtime of inconsistent gedrag binnen het netwerk. 
 
-\begin{itemize}
-  \item context, achtergrond
-  \item afbakenen van het onderwerp
-  \item verantwoording van het onderwerp, methodologie
-  \item probleemstelling
-  \item onderzoeksdoelstelling
-  \item onderzoeksvraag
-  \item \ldots
-\end{itemize}
+Om deze uitdagingen aan te pakken, kijken bedrijven steeds meer naar automatisatie. 
+Door configuraties te centraliseren en automatisch uit te rollen, kunnen organisaties tijd besparen, menselijke fouten verminderen en hun infrastructuur sneller aanpassen aan veranderende bedrijfsbehoeften. 
+Een van de tools die hiervoor ingezet kan worden, is \textbf{Ansible}, een open-source automatisatietool die netwerkbeheerders in staat stelt configuraties via eenvoudige YAML-scripts te beheren. 
+Deze bachelorproef onderzoekt in welke mate Ansible gebruikt kan worden om netwerkconfiguratie te automatiseren en welke voordelen dit met zich mee brengt.
+
+\subsection{Afbakening van het onderwerp}
+
+
+Deze bachelorproef focust op de automatisering van de configuratie op Cisco IOS netwerktoestellen binnen een gesimuleerde bedrijfsomgeving, opgebouwd in GNS3.
+De nadruk ligt op het toepassen van Ansible voor het configureren van Cisco routers en switches.
+
+
+\subsection{Verantwoording en methodologie}
+
+
+Het onderwerp is maatschappelijk en technologisch relevant omdat netwerkautomatisering een sleutelrol speelt in het verminderen van operationele kosten en het verhogen van betrouwbaarheid.
+Het onderzoek volgt een praktijkgericht karakter: er wordt een testomgeving ontworpen waarin Ansible-playbooks worden ontwikkeld, getest en geëvalueerd. 
+De methodologie omvat het ontwerpen van een netwerkarchitectuur, het schrijven van configuratiescripts en het valideren van de resultaten op basis van meetbare criteria zoals tijdbesparing, consistentie en reproduceerbaarheid, schaalbaarheid en foutafhandeling.
+
 
 \section{\IfLanguageName{dutch}{Probleemstelling}{Problem Statement}}%
 \label{sec:probleemstelling}
 
-Uit je probleemstelling moet duidelijk zijn dat je onderzoek een meerwaarde heeft voor een concrete doelgroep. De doelgroep moet goed gedefinieerd en afgelijnd zijn. Doelgroepen als ``bedrijven,'' ``KMO's'', systeembeheerders, enz.~zijn nog te vaag. Als je een lijstje kan maken van de personen/organisaties die een meerwaarde zullen vinden in deze bachelorproef (dit is eigenlijk je steekproefkader), dan is dat een indicatie dat de doelgroep goed gedefinieerd is. Dit kan een enkel bedrijf zijn of zelfs één persoon (je co-promotor/opdrachtgever).
+Manuele configuratie van netwerkapparatuur is foutgevoelig, moeilijk reproduceerbaar en slecht schaalbaar. 
+Dit vormt een probleem voor organisaties die streven naar gestandaardiseerde en snel aanpasbare netwerkomgevingen. 
+Er is nood aan een geautomatiseerde oplossing die deze tekortkomingen opvangt zonder de betrouwbaarheid van bestaande netwerken te schaden.
 
 \section{\IfLanguageName{dutch}{Onderzoeksvraag}{Research question}}%
 \label{sec:onderzoeksvraag}
