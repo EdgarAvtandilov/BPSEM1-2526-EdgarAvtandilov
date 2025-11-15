@@ -1,51 +1,14 @@
 \chapter{\IfLanguageName{dutch}{Stand van zaken}{State of the art}}%
 \label{ch:stand-van-zaken}
 
-% Tip: Begin elk hoofdstuk met een paragraaf inleiding die beschrijft hoe
-% dit hoofdstuk past binnen het geheel van de bachelorproef. Geef in het
-% bijzonder aan wat de link is met het vorige en volgende hoofdstuk.
+\section{De nood aan netwerkautomatisatie}
+\label{sec:automatisatie}
 
-% Pas na deze inleidende paragraaf komt de eerste sectiehoofding.
-
-Dit hoofdstuk bevat je literatuurstudie. De inhoud gaat verder op de inleiding, maar zal het onderwerp van de bachelorproef *diepgaand* uitspitten. De bedoeling is dat de lezer na lezing van dit hoofdstuk helemaal op de hoogte is van de huidige stand van zaken (state-of-the-art) in het onderzoeksdomein. Iemand die niet vertrouwd is met het onderwerp, weet nu voldoende om de rest van het verhaal te kunnen volgen, zonder dat die er nog andere informatie moet over opzoeken \autocite{Pollefliet2011}.
-
-Je verwijst bij elke bewering die je doet, vakterm die je introduceert, enz.\ naar je bronnen. In \LaTeX{} kan dat met het commando \texttt{$\backslash${textcite\{\}}} of \texttt{$\backslash${autocite\{\}}}. Als argument van het commando geef je de ``sleutel'' van een ``record'' in een bibliografische databank in het Bib\LaTeX{}-formaat (een tekstbestand). Als je expliciet naar de auteur verwijst in de zin (narratieve referentie), gebruik je \texttt{$\backslash${}textcite\{\}}. Soms is de auteursnaam niet expliciet een onderdeel van de zin, dan gebruik je \texttt{$\backslash${}autocite\{\}} (referentie tussen haakjes). Dit gebruik je bv.~bij een citaat, of om in het bijschrift van een overgenomen afbeelding, broncode, tabel, enz. te verwijzen naar de bron. In de volgende paragraaf een voorbeeld van elk.
-
-\textcite{Knuth1998} schreef een van de standaardwerken over sorteer- en zoekalgoritmen. Experten zijn het erover eens dat cloud computing een interessante opportuniteit vormen, zowel voor gebruikers als voor dienstverleners op vlak van informatietechnologie~\autocite{Creeger2009}.
-
-Let er ook op: het \texttt{cite}-commando voor de punt, dus binnen de zin. Je verwijst meteen naar een bron in de eerste zin die erop gebaseerd is, dus niet pas op het einde van een paragraaf.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{grail.jpg}
-  \caption[Voorbeeld figuur.]{\label{fig:grail}Voorbeeld van invoegen van een figuur. Zorg altijd voor een uitgebreid bijschrift dat de figuur volledig beschrijft zonder in de tekst te moeten gaan zoeken. Vergeet ook je bronvermelding niet!}
-\end{figure}
-
-\begin{listing}
-  \begin{minted}{python}
-    import pandas as pd
-    import seaborn as sns
-
-    penguins = sns.load_dataset('penguins')
-    sns.relplot(data=penguins, x="flipper_length_mm", y="bill_length_mm", hue="species")
-  \end{minted}
-  \caption[Voorbeeld codefragment]{Voorbeeld van het invoegen van een codefragment.}
-\end{listing}
-
-\lipsum[7-20]
-
-\begin{table}
-  \centering
-  \begin{tabular}{lcr}
-    \toprule
-    \textbf{Kolom 1} & \textbf{Kolom 2} & \textbf{Kolom 3} \\
-    $\alpha$         & $\beta$          & $\gamma$         \\
-    \midrule
-    A                & 10.230           & a                \\
-    B                & 45.678           & b                \\
-    C                & 99.987           & c                \\
-    \bottomrule
-  \end{tabular}
-  \caption[Voorbeeld tabel]{\label{tab:example}Voorbeeld van een tabel.}
-\end{table}
+Constante beschikbaarheid is de dag van vandaag zeer belangrijk in een bedrijfscontext.
+Niet beschikbaar zijn, is voor bedrijven meer dan een kwestie van hun website die niet beschikbaar is. 
+Downtime brengt ook grote kosten met zich mee. Zo toont een onderzoek van het Uptime Instute aan dat downtime voor 54\% van respondenten van hun enquête kosten van meer dan \$100.000 met zich mee brengt, en voor 1 in 5 respondenten liep dit op naar meer dan \$1.000.000 \autocite{UptimeInstitute2025}.
+Dit onderzoek toont ook dat netwerk- en/of connectiviteitproblemen de oorzaak zijn van 34\% van IT-gerelateerde downtime. Een netwerk met 20 netwerktoestellen configureren vraagt om honderden configuratieregels, wat op zijn beurt honderden kansen op voor een menselijke fout biedt. 
+Netwerken worden traditioneel via de command line interface (CLI) geconfigureerd.
+Hoewel dit volledige controle geeft, toont het onderzoek van Uptime Institute aan dat menselijke fouten bijdragen tot 40\% van fouten die downtime veroorzaken. Menselijke interactie minimaliseren bij netwerkconfiguratie zou dus een perfecte oplossing kunnen bieden. 
+Automatisatie biedt een antwoord op deze problemen door configuraties te centraliseren, sneller, reproduceerbaar en consistent, schaalbaar en foutloos te maken \autocite{Wagbrant2022}. 
 
