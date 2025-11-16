@@ -12,3 +12,86 @@ Netwerken worden traditioneel via de command line interface (CLI) geconfigureerd
 Hoewel dit volledige controle geeft, toont het onderzoek van Uptime Institute aan dat menselijke fouten bijdragen tot 40\% van fouten die downtime veroorzaken. Menselijke interactie minimaliseren bij netwerkconfiguratie zou dus een perfecte oplossing kunnen bieden. 
 Automatisatie biedt een antwoord op deze problemen door configuraties te centraliseren, sneller, reproduceerbaar en consistent, schaalbaar en foutloos te maken \autocite{Wagbrant2022}. 
 
+\section{Vergelijking van automatiseringstools}
+\label{sec:tools}
+
+Binnen netwerk- en infrastructuurautomatisatie bestaan meerdere tools die configuratiebeheer ondersteunen. 
+Hoewel ze vergelijkbare doelen nastreven, verschillen ze sterk in architectuur, werkwijze en geschiktheid voor traditionele netwerkapparatuur zoals routers en switches. 
+Hieronder volgt een gestructureerde vergelijking van de meest relevante oplossingen.
+
+\begin{itemize}
+
+  \item \textbf{Puppet}  
+        \begin{itemize}
+          \item Agent-based architectuur: elk toestel vereist een Puppet-agent.
+          \item Declaratieve configuratietaal.
+          \item Minder bruikbaar op klassieke netwerktoestellen waar geen agent kan draaien.
+        \end{itemize}
+
+  \item \textbf{Chef}  
+        \begin{itemize}
+          \item Agent-based, gebruikt een centrale Chef-server.
+          \item Configuraties worden geschreven in Ruby.
+          \item Hoge uitbreidbaarheid maar steile leercurve.
+          \item Beperkt inzetbaar voor netwerkapparaten zonder agent-ondersteuning.
+        \end{itemize}
+
+
+  \item \textbf{Ansible}  
+        \begin{itemize}
+          \item Volledig agentless: werkt via SSH of API's, ideaal voor netwerkapparaten.
+          \item Configuraties worden beschreven in YAML, zeer leesbaar en toegankelijk.
+          \item Grote collectie netwerkmodules (\emph{Cisco IOS}, \emph{IOS-XE}, \emph{NX-OS}, \emph{Arista EOS}, \emph{JunOS}, ...).
+        \end{itemize}
+
+  \item \textbf{Python (met Netmiko, NAPALM, Paramiko)}  
+        \begin{itemize}
+          \item Python zelf is geen configuratietool, maar vormt de basis van veel netwerkautomatisatie.
+          \item Libraries zoals Netmiko, NAPALM en Paramiko kunnen:
+                \begin{itemize}
+                  \item CLI-commando's automatisch uitvoeren op routers en switches,
+                  \item configuraties opvragen, verwerken en verifiëren,
+                  \item veranderingen pushen via SSH.
+                \end{itemize}
+          \item Zeer flexibel, ideaal voor maatwerk of complexe logica.
+          \item Minder geschikt voor grootschalig configuratiebeheer dan Ansible:
+                geen standaardinventaris, minder idempotentie, geen rollen/playbooks.
+        \end{itemize}
+
+\end{itemize}
+
+\textbf{Conclusie}:  
+Hoewel Puppet, Chef en Python-gebaseerde automatisatie elk waardevolle toepassingen hebben, is Ansible door zijn agentless-architectuur, leesbare YAML-configuraties en uitgebreide netwerkondersteuning het meest geschikt voor het doel van deze bachelorproef: schaalbare, consistente en foutreducerende netwerkautomatisatie binnen een kmo-context.
+
+\section{Ansible in netwerkautomatisatie}
+\label{sec:ansible}
+
+Ansible werd oorspronkelijk ontwikkeld voor serverbeheer, maar is inmiddels een volwaardige NetDevOps-tool geworden.
+De werking steunt op drie kernelementen:
+
+\begin{enumerate}
+  \item \textbf{Inventories}: lijsten met netwerkapparaten
+  \item \textbf{Playbooks}: YAML-bestanden met de gewenste configuratiestappen
+  \item \textbf{Modules}: vooraf gebouwde functies voor configuratiebeheer
+\end{enumerate}
+
+Een belangrijk voordeel is idempotentie: het systeem garandeert dat een configuratie in dezelfde toestand eindigt, ongeacht het aantal keer dat deze wordt toegepast.
+
+Daarnaast laat Ansible het gebruik van \textbf{roles} toe, waarmee configuratie opgedeeld wordt in herbruikbare bouwblokken. 
+In een bedrijfscontext is dit extreem waardevol voor consistent beheer.
+
+\section{Ansible en Cisco IOS}
+\label{sec:cisco}
+
+Cisco heeft een eigen Ansible-collectie, \textbf{cisco.ios}, met modules voor interfacebeheer, routing, logging, Network Time Protocol (NTP) en Network Address Translation (NAT).
+De CLI-abstractie maakt Ansible bijzonder geschikt voor oudere toestellen die geen moderne API's ondersteunen.
+
+\section{Beperkingen en uitdagingen}
+\label{sec:beperkingen}
+
+Ondanks zijn sterke punten kent ook Ansible enkele beperkingen:
+
+\begin{itemize}
+  \item Manuele SSH-setup om Ansible te laten verbinden met de netwerktoestellen.
+  \item Fouten in een task kunnen volledige playbooks doen falen. Een voordeel hiervan is echter dat een foute configuratie niet wordt toegepast aangezien de playbooks falen voordat ze beginnen met de configuratie toe te passen.
+\end{itemize}
