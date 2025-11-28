@@ -6,43 +6,87 @@
 
 Constante beschikbaarheid is de dag van vandaag zeer belangrijk in een bedrijfscontext.
 Niet beschikbaar zijn, is voor bedrijven meer dan een kwestie van hun website die niet beschikbaar is. 
-Downtime brengt ook grote kosten met zich mee. Zo toont een onderzoek van het Uptime Instute aan dat downtime voor 54\% van respondenten van hun enquête kosten van meer dan \$100.000 met zich mee brengt, en voor 1 in 5 respondenten liep dit op naar meer dan \$1.000.000 \autocite{UptimeInstitute2025}.
-Dit onderzoek toont ook dat netwerk- en/of connectiviteitproblemen de oorzaak zijn van 34\% van IT-gerelateerde downtime. Een netwerk met 20 netwerktoestellen configureren vraagt om honderden configuratieregels, wat op zijn beurt honderden kansen op voor een menselijke fout biedt. 
+Downtime brengt ook grote kosten met zich mee. Zo toont een onderzoek van het Uptime Institute aan dat downtime voor 54\% van respondenten van hun enquête kosten van meer dan \$100.000 met zich mee brengt, en voor 1 in 5 respondenten liep dit op naar meer dan \$1.000.000 \autocite{UptimeInstitute2025}.
+Dit onderzoek toont ook dat netwerk- en/of connectiviteitproblemen de oorzaak zijn van 34\% van IT-gerelateerde downtime. Een netwerk met 20 netwerktoestellen configureren vraagt om honderden configuratieregels, wat op zijn beurt honderden kansen voor een menselijke fout biedt. 
+
 Netwerken worden traditioneel via de command line interface (CLI) geconfigureerd.
-Hoewel dit volledige controle geeft, toont het onderzoek van Uptime Institute aan dat menselijke fouten bijdragen tot 40\% van fouten die downtime veroorzaken. Menselijke interactie minimaliseren bij netwerkconfiguratie zou dus een perfecte oplossing kunnen bieden. 
-Automatisatie biedt een antwoord op deze problemen door configuraties te centraliseren, sneller, reproduceerbaar en consistent, schaalbaar en foutloos te maken \autocite{Wagbrant2022}. 
+Hoewel dit volledige controle geeft, toont het onderzoek van Uptime Institute aan dat menselijke fouten bijdragen tot 40\% van fouten die downtime veroorzaken \autocite{UptimeInstitute2025}. 
+Menselijke interactie minimaliseren bij netwerkconfiguratie zou dus een perfecte oplossing kunnen bieden. 
+Volgens \textcite{Gartner2023} gebeurd meer dan 65\% van alle netwerktaken manueel, hoewel er wel een stijgende trend is in het aantal bedrijven die meer dan de helft van hun netwerktaken automatiseren.
+Deze inefficiëntie heeft niet alleen impact op de operationele kosten, maar ook op de innovatiecapaciteit van IT-afdelingen.
+
+De complexiteit van moderne netwerken neemt ook toe. 
+Uit cijfers van \textcite{shi2021devicegrowth} blijkt dat het totaal aantal netwerk- en verbonden apparaten wereldwijd tussen 2016 en 2021 is gestegen van 17,1 miljard naar 27,1 miljard, een toename van ongeveer 58\%.
+Hoewel er geen specifieke wereldwijde cijfers beschikbaar zijn voor de groei in afzonderlijke netwerkcomponenten zoals switches, routers en access points, kan logischerwijs worden aangenomen dat deze categorieën meegroeien met het totale aantal verbonden apparaten.
+Deze apparaten vormen immers de infrastructuur die nodig is om de groeiende hoeveelheid verbonden eindpunten te ondersteunen.
+Deze grotere, complexere netwerken zorgen ervoor dat automatisatie geen luxe meer is, maar een noodzaak.
+
+Automatisatie biedt een antwoord op deze problemen door configuraties te centraliseren, sneller, reproduceerbaar en consistent, schaalbaar en foutloos te maken \autocite{Wagbrant2022}. 
+Volgens \textcite{Mahant2024networkautomation} kunnen organisaties die netwerkautomatisering implementeren hun configuratietijd met ~85\% reduceren en het aantal configuratiefouten verminderen met 78\%.
 
 \section{Vergelijking van automatiseringstools}
 \label{sec:tools}
 
-Binnen netwerk- en infrastructuurautomatisatie bestaan meerdere tools die configuratiebeheer ondersteunen. 
-Hoewel ze vergelijkbare doelen nastreven, verschillen ze sterk in architectuur, werkwijze en geschiktheid voor traditionele netwerkapparatuur zoals routers en switches. 
-Hieronder volgt een gestructureerde vergelijking van de meest relevante oplossingen.
+Binnen netwerk- en infrastructuurautomatisatie bestaan meerdere tools die ingezet kunnen worden voor netwerkconfiguratie. 
+Hoewel ze hetzelfde doel nastreven, verschillen ze sterk in architectuur, werkwijze en geschiktheid voor traditionele netwerkapparatuur zoals routers en switches. 
+Hieronder volgt een vergelijking van de meest relevante oplossingen.
+
+\subsection{Agent-based versus agentless architectuur}
+\label{subsec:agent-vs-agentless}
+
+Een fundamenteel onderscheid tussen automatiseringstools is of ze een agent vereisen op de managed nodes.
+
+\textbf{Agent-based tools} zoals Puppet en Chef installeren software op elk te beheren systeem. 
+Deze agent communiceert met een centrale server en voert configuratiewijzigingen uit.
+Het voordeel is dat agents proactief de gewenste state kunnen handhaven door regelmatig te controleren en corrigeren.
+Het nadeel is dat agents resources consumeren, zelf moeten worden beheerd en niet beschikbaar zijn voor veel netwerkapparatuur.
+
+\textbf{Agentless tools} zoals Ansible werken via standaardprotocollen zoals SSH of API's zonder dat er software hoeft te worden geïnstalleerd op de managed nodes.
+Dit maakt ze bijzonder geschikt voor netwerkapparaten die geen mogelijkheid bieden om third-party software te installeren.
+Het nadeel is dat configuratiewijzigingen moet worden gepushed vanuit een centrale control node in plaats van dat nodes proactief hun staat handhaven.
+
+\subsection{Overzicht van automatiseringstools}
+\label{subsec:tools-overzicht}
 
 \begin{itemize}
 
-  \item \textbf{Puppet}  
+  \item \textbf{Puppet} \autocite{PuppetLabsDocs}  
         \begin{itemize}
-          \item Agent-based architectuur: elk toestel vereist een Puppet-agent.
-          \item Declaratieve configuratietaal.
-          \item Minder bruikbaar op klassieke netwerktoestellen waar geen agent kan draaien.
+          \item Agent-based architectuur: op elk toestel moet een Puppet-agent geïnstalleerd worden.
+          \item Declaratieve configuratietaal (Puppet DSL).
+          \item Sterke focus op continuous enforcement: agents checken regelmatig of de configuratie nog klopt.
+          \item Perfect gepast voor bedrijven dankzij uitgebreide rapportage- en compliance-functies.
+          \item Minder bruikbaar op klassieke netwerktoestellen waar geen agent op kan draaien.
+          \item Steile leercurve door eigen Domain-Specific Language (DSL, een programmeertaal die speciaal ontworpen is voor één bepaald toepassingsgebied).
         \end{itemize}
 
-  \item \textbf{Chef}  
+  \item \textbf{Chef}  \autocite{ChefSoftwareDocs}
         \begin{itemize}
           \item Agent-based, gebruikt een centrale Chef-server.
           \item Configuraties worden geschreven in Ruby.
-          \item Hoge uitbreidbaarheid maar steile leercurve.
+          \item Hoge uitbreidbaarheid maar steile leercurve doordat kennis van Ruby nodig is.
+          \item Sterke integratie met cloud platforms.
           \item Beperkt inzetbaar voor netwerkapparaten zonder agent-ondersteuning.
         \end{itemize}
 
-
-  \item \textbf{Ansible}  
+  \item \textbf{SaltStack} \autocite{SaltStackDocs}
         \begin{itemize}
-          \item Volledig agentless: werkt via SSH of API's, ideaal voor netwerkapparaten.
-          \item Configuraties worden beschreven in YAML, zeer leesbaar en toegankelijk.
-          \item Grote collectie netwerkmodules (\emph{Cisco IOS}, \emph{IOS-XE}, \emph{NX-OS}, \emph{Arista EOS}, \emph{JunOS}, ...).
+          \item Hybride architectuur: ondersteunt zowel agent-based (Salt minion) als agentless (SSH).
+          \item Configuraties in YAML, executie in Python.
+          \item Zeer snelle executie door gebruik van ZeroMQ message bus.
+          \item Ondersteunt event-driven automatisatie en real-time communicatie.
+          \item Minder uitgebreide netwerkmodules dan Ansible.
         \end{itemize}
+
+  \item \textbf{Ansible}  \autocite{AnsibleDocs}
+        \begin{itemize}
+          \item Volledig agentless: werkt via SSH of API's, kan dus toegepast worden op netwerktoestellen die geen installatie van agents ondersteunen.
+          \item Configuraties worden beschreven in YAML, een makkelijk leesbar en daardoor toegankelijk.
+          \item Grote collectie modules (\emph{Cisco IOS}, \emph{IOS-XE}, \emph{NX-OS}, \emph{Arista EOS}, \emph{JunOS}, \emph{Juniper}, ...). \autocite{AnsibleCommunityNetworkModules}
+          \item Lage instapdrempel: geen kennis van andere programmeertalen vereist om te beginnen.
+          \item Grote community en uitgebreide documentatie.
+        \end{itemize}
+
 
   \item \textbf{Python (met Netmiko, NAPALM, Paramiko)}  
         \begin{itemize}
@@ -56,42 +100,282 @@ Hieronder volgt een gestructureerde vergelijking van de meest relevante oplossin
           \item Zeer flexibel, ideaal voor maatwerk of complexe logica.
           \item Minder geschikt voor grootschalig configuratiebeheer dan Ansible:
                 geen standaardinventaris, minder idempotentie, geen rollen/playbooks.
+          \item Vereist programmeerkennis.
         \end{itemize}
 
 \end{itemize}
 
-\textbf{Conclusie}:  
-Hoewel Puppet, Chef en Python-gebaseerde automatisatie elk waardevolle toepassingen hebben, is Ansible door zijn agentless-architectuur, leesbare YAML-configuraties en uitgebreide netwerkondersteuning het meest geschikt voor het doel van deze bachelorproef: schaalbare, consistente en foutreducerende netwerkautomatisatie binnen een kmo-context.
+\section{Infrastructure as Code}
+\label{sec:iac}
 
-\section{Ansible in netwerkautomatisatie}
+Infrastructure as Code (IaC) is een manier waarbij infrastructuur beheerd wordt via machineleesbare configuratiebestanden in plaats van via manuele configuratie. 
+Dit concept, dat oorspronkelijk werd ontwikkeld voor serverbeheer, is inmiddels uitgebreid naar netwerkinfrastructuur.
+
+\subsection{Infrastructure as Code best practices}
+\label{subsec:iac-best-practices}
+
+Bij het implementeren van IaC voor netwerken zijn er enkele fundamentele best practices:
+
+\textbf{Idempotentie}: Configuraties moeten hetzelfde resultaat opleveren, ongeacht hoe vaak ze worden toegepast. 
+Dit principe, centraal in tools zoals Ansible, garandeert voorspelbaarheid en voorkomt ongewenste wijzigingen.
+Een idempotente operatie kan veilig meerdere keren worden uitgevoerd zonder neveneffecten.
+
+\textbf{Declaratieve configuratie}: In plaats van te specificeren hoe een configuratie moet worden toegepast (imperatief), beschrijft men de gewenste eindtoestand (declaratief). 
+Het systeem zorgt ervoor dat de infrastructuur in deze toestand wordt gebracht.
+Dit abstractieniveau maakt configuraties leesbaarder en onderhoudsvriendelijker.
+
+\textbf{Modulaire architectuur}: Configuraties worden opgesplitst in herbruikbare modules of rollen. 
+Dit bevordert consistentie en versnelt het uitrollen van nieuwe toestellen.
+In Ansible-context worden deze modules \textbf{roles} genoemd.
+
+\textbf{Immutable infrastructure}: In plaats van bestaande configuraties aan te passen, worden nieuwe configuraties volledig opnieuw uitgerold. 
+Dit principe, hoewel uitdagender voor netwerkapparatuur dan voor servers, verkleint de kans op configuration drift.
+
+\section{Fundamentele concepten in netwerkautomatisering}
+\label{sec:fundamentele-concepten}
+
+\subsection{Idempotentie in detail}
+\label{subsec:idempotentie}
+
+Idempotentie is een wiskundig concept dat in de context van netwerkautomatisering betekent dat een operatie meerdere keren kan worden uitgevoerd zonder dat het resultaat verandert na de eerste succesvolle uitvoering.
+
+Beschouw bijvoorbeeld de configuratie van een VLAN. 
+Een idempotente operatie controleert eerst of VLAN 100 al bestaat. 
+Indien ja, wordt geen actie ondernomen. 
+Indien nee, wordt het VLAN aangemaakt. 
+Bij een tweede uitvoering van dezelfde operatie is VLAN 100 al aanwezig, dus gebeurt er niets.
+Dit in tegenstelling tot een niet-idempotente operatie die zou proberen VLAN 100 opnieuw aan te maken, wat tot een fout zou leiden.
+
+Dit principe is essentieel voor betrouwbare automatisering omdat het betekent dat playbooks veilig opnieuw kunnen worden uitgevoerd zonder ongewenste bijeffecten \autocite{Geerling2020AnsibleDevOps}. 
+Het maakt ook troubleshooting eenvoudiger: als een playbook halverwege faalt, kan het gewoon opnieuw worden gestart zonder dat eerdere stappen handmatig moeten worden teruggedraaid.
+
+\subsection{Declaratieve versus imperatieve configuratie}
+\label{subsec:declaratief-imperatief}
+
+In imperatieve programmering specificeert men exact \emph{hoe} een taak moet worden uitgevoerd: een reeks stappen die in een bepaalde volgorde moeten worden uitgevoerd \autocite{Morris2016InfrastructureAsCode}.
+Bijvoorbeeld:
+\begin{verbatim}
+1. Verbind met switch
+2. Ga naar configuratiemodus
+3. Maak VLAN 100 aan
+4. Geef VLAN 100 de naam "Sales"
+5. Wijs interface Gi0/1 toe aan VLAN 100
+6. Sla configuratie op
+\end{verbatim}
+
+In declaratieve configuratie beschrijft men de gewenste eindtoestand, en het systeem bepaalt zelf hoe deze te bereiken \autocite{Wiggins2018CloudNativeInfrastructure}:
+\begin{verbatim}
+VLAN 100 moet bestaan
+VLAN 100 moet naam "Sales" hebben
+Interface Gi0/1 moet in VLAN 100 zitten
+\end{verbatim}
+
+Het voordeel van de declaratieve benadering is dat deze abstraheert van de implementatiedetails en zich richt op de bedoeling \autocite{Edelman2018NetworkProgrammability}. 
+Dit maakt configuraties leesbaarder, onderhoudsvriendelijker en platform-onafhankelijker.
+Ansible gebruikt voornamelijk een declaratieve benadering, hoewel het ook imperatieve elementen ondersteunt waar nodig.
+
+\subsection{Version control voor netwerkconfiguraties}
+\label{subsec:version-control}
+
+Git is de de-facto standaard geworden voor version control in Infrastructure as Code \autocite{Chacon2014ProGit}. 
+Voor netwerkautomatisering biedt Git essentiële functionaliteit:
+
+\textbf{Change tracking}: Elke wijziging wordt bijgehouden met metadata (wie, wanneer, waarom). 
+Dit creëert een volledige audit trail die essentieel is voor compliance en troubleshooting \autocite{NIST2023NetworkSecurity}.
+
+\textbf{Branching en merging}: Teams kunnen parallel werken aan verschillende configuratiewijzigingen. 
+Branches kunnen worden gebruikt voor development, testing en productie-omgevingen \autocite{Driessen2010GitFlow}.
+
+\textbf{Rollback mogelijkheden}: Elke vorige versie van een configuratie kan eenvoudig worden hersteld. 
+Dit is cruciaal bij troubleshooting of wanneer een wijziging onverwachte problemen veroorzaakt \autocite{Loeliger2012VersionControl}.
+
+\textbf{Code review}: Via pull requests kunnen configuratiewijzigingen worden gereviewed door collega's voordat ze worden geïmplementeerd \autocite{Forsgren2018Accelerate}. 
+Dit vier-ogen-principe verkleint de kans op fouten aanzienlijk.
+
+Een typische Git-workflow voor netwerkautomatisering volgt het GitFlow-model \autocite{Driessen2010GitFlow}: een \texttt{main} branch voor productie, een \texttt{develop} branch voor development, en \texttt{feature} branches voor specifieke wijzigingen.
+Configuratiewijzigingen worden eerst getest in een lab-omgeving voordat ze via een pull request naar \texttt{develop} en uiteindelijk naar \texttt{main} worden gemerged.
+
+
+\subsection{Keuze voor Ansible}
+\label{subsec:keuze-ansible}
+
+Voor deze bachelorproef is gekozen voor Ansible om de volgende redenen:
+
+\textbf{Agentless architectuur}: Klassieke netwerkapparatuur zoals Cisco routers en switches bieden geen mogelijkheid om agents te installeren. 
+Ansible's SSH-based aanpak maakt het mogelijk om deze apparaten direct te beheren zonder aanpassingen \autocite{Hochstein2017AnsibleUpRunning}.
+
+\textbf{Lage instapdrempel}: YAML is een zeer leesbare configuratietaal die geen programmeerkennis vereist. 
+Dit maakt Ansible toegankelijk voor netwerkengineers die geen development achtergrond hebben \autocite{Geerling2020AnsibleDevOps}.
+In een kmo-context, waar teams vaak kleiner zijn en minder gespecialiseerd, is deze toegankelijkheid cruciaal.
+
+\textbf{Uitgebreide netwerkondersteuning}: Ansible heeft een grote collectie van netwerkmodules die specifiek zijn ontwikkeld voor populaire netwerkapparatuur \autocite{AnsibleCommunity2024NetworkModules}. 
+De cisco.ios collection biedt out-of-the-box ondersteuning voor Cisco IOS-toestellen, wat relevant is voor deze proof-of-concept.
+
+\textbf{Community en documentatie}: Als de meest populaire configuratietool heeft Ansible een grote community en uitgebreide documentatie \autocite{RedHat2024AnsibleDocs}. 
+Dit verlaagt de drempel voor troubleshooting en kennisuitwisseling.
+
+\textbf{Schaalbaarheid}: Hoewel Ansible begint als een eenvoudige tool, kan het opschalen naar enterprise-niveau met Ansible Tower/AWX voor centraal beheer, RBAC en audit logs \autocite{RedHat2024TowerDocs}.
+
+Deze eigenschappen maken Ansible bijzonder geschikt voor het doel van deze bachelorproef: schaalbare, consistente en foutreducerende netwerkautomatisatie binnen een kmo-context waar toegankelijkheid en onderhoudbaarheid essentieel zijn.
+
+\section{Ansible in netwerkautomatisering}
 \label{sec:ansible}
 
-Ansible werd oorspronkelijk ontwikkeld voor serverbeheer, maar is inmiddels een volwaardige NetDevOps-tool geworden.
-De werking steunt op drie kernelementen:
+Ansible werd oorspronkelijk ontwikkeld door Michael DeHaan in 2012 voor serverbeheer en werd in 2015 overgenomen door Red Hat \autocite{Hochstein2017AnsibleUpRunning}.
+Inmiddels is het een volwaardige NetDevOps-tool geworden met uitgebreide ondersteuning voor netwerkapparatuur.
 
-\begin{enumerate}
-  \item \textbf{Inventories}: lijsten met netwerkapparaten
-  \item \textbf{Playbooks}: YAML-bestanden met de gewenste configuratiestappen
-  \item \textbf{Modules}: vooraf gebouwde functies voor configuratiebeheer
-\end{enumerate}
+\subsection{Ansible architectuur}
+\label{subsec:ansible-architectuur}
 
-Een belangrijk voordeel is idempotentie: het systeem garandeert dat een configuratie in dezelfde toestand eindigt, ongeacht het aantal keer dat deze wordt toegepast.
+De Ansible-architectuur bestaat uit drie hoofdcomponenten \autocite{RedHat2024AnsibleDocs}:
 
-Daarnaast laat Ansible het gebruik van \textbf{roles} toe, waarmee configuratie opgedeeld wordt in herbruikbare bouwblokken. 
-In een bedrijfscontext is dit extreem waardevol voor consistent beheer.
+\textbf{Control node}: De machine waarop Ansible is geïnstalleerd en van waaruit playbooks worden uitgevoerd. 
+Dit kan een laptop, server of CI/CD-systeem zijn. 
+De control node heeft Python nodig maar legt verder minimale eisen op.
 
-\section{Ansible en Cisco IOS}
-\label{sec:cisco}
+\textbf{Managed nodes}: De systemen die door Ansible worden beheerd. 
+Voor Linux-servers is alleen SSH en Python vereist. 
+Voor netwerkapparaten is alleen SSH nodig; Ansible communiceert via de CLI \autocite{AnsibleCommunity2024NetworkModules}.
 
-Cisco heeft een eigen Ansible-collectie, \textbf{cisco.ios}, met modules voor interfacebeheer, routing, logging, Network Time Protocol (NTP) en Network Address Translation (NAT).
-De CLI-abstractie maakt Ansible bijzonder geschikt voor oudere toestellen die geen moderne API's ondersteunen.
+\textbf{Inventory}: Een bestand (of dynamische bron) dat definieert welke nodes moeten worden beheerd en hoe ze zijn gegroepeerd. 
+Inventories kunnen statisch (YAML- of INI-bestanden) of dynamisch (scripts die nodes ophalen uit externe bronnen) zijn \autocite{Hochstein2017AnsibleUpRunning}.
 
-\section{Beperkingen en uitdagingen}
-\label{sec:beperkingen}
+\subsection{Kernconcepten}
+\label{subsec:ansible-kernconcepten}
 
-Ondanks zijn sterke punten kent ook Ansible enkele beperkingen:
+De werking van Ansible steunt op drie kernelementen:
 
+\subsubsection{Inventories}
+\label{subsubsec:inventories}
+
+Een inventory is een lijst met managed nodes, georganiseerd in groepen \autocite{RedHat2024AnsibleDocs}. 
+Een eenvoudig voorbeeld:
+
+\begin{verbatim}
+[switches]
+sw1 ansible_host=192.168.1.10
+sw2 ansible_host=192.168.1.11
+
+[routers]
+r1 ansible_host=192.168.1.1
+r2 ansible_host=192.168.1.2
+
+[cisco:children]
+switches
+routers
+
+[cisco:vars]
+ansible_network_os=ios
+ansible_connection=network_cli
+ansible_user=admin
+\end{verbatim}
+
+Inventories ondersteunen variabelen op host- en groepsniveau, waardoor configuraties kunnen worden aangepast per toestel of groep \autocite{Hochstein2017AnsibleUpRunning}.
+Dynamic inventories kunnen nodes automatisch ontdekken uit bronnen zoals cloud providers of CMDBs \autocite{Geerling2020AnsibleDevOps}.
+
+\subsubsection{Playbooks}
+\label{subsubsec:playbooks}
+
+Playbooks zijn YAML-bestanden die de gewenste configuratiestappen beschrijven \autocite{RedHat2024AnsibleDocs}. 
+Een playbook bestaat uit een of meer \emph{plays}, waarbij elke play een reeks \emph{tasks} definieert die op een groep hosts worden uitgevoerd.
+
+Voorbeeld van een eenvoudig playbook:
+
+\begin{verbatim}
+---
+- name: Configure VLANs on switches
+  hosts: switches
+  gather_facts: no
+  
+  tasks:
+    - name: Create VLAN 100
+      cisco.ios.ios_vlan:
+        vlan_id: 100
+        name: Sales
+        state: present
+    
+    - name: Create VLAN 200
+      cisco.ios.ios_vlan:
+        vlan_id: 200
+        name: Engineering
+        state: present
+\end{verbatim}
+
+Playbooks kunnen complexe logica bevatten met conditionals, loops en error handling \autocite{Hochstein2017AnsibleUpRunning}.
+De YAML-syntax maakt ze leesbaar voor zowel mensen als machines.
+
+\subsubsection{Modules}
+\label{subsubsec:modules}
+
+Modules zijn vooraf gebouwde functies die specifieke taken uitvoeren \autocite{AnsibleCommunity2024ModuleIndex}. 
+Ansible heeft duizenden modules, waaronder honderden specifiek voor netwerkautomatisering.
+
+Voorbeelden van netwerkmodules:
 \begin{itemize}
-  \item Manuele SSH-setup om Ansible te laten verbinden met de netwerktoestellen.
-  \item Fouten in een task kunnen volledige playbooks doen falen. Een voordeel hiervan is echter dat een foute configuratie niet wordt toegepast aangezien de playbooks falen voordat ze beginnen met de configuratie toe te passen.
+  \item \texttt{cisco.ios.ios\_config}: Voor algemene IOS-configuratie
+  \item \texttt{cisco.ios.ios\_vlan}: Voor VLAN-beheer
+  \item \texttt{cisco.ios.ios\_interface}: Voor interface-configuratie
+  \item \texttt{cisco.ios.ios\_static\_route}: Voor static routing
+  \item \texttt{cisco.ios.ios\_logging}: Voor logging-configuratie
 \end{itemize}
+
+Modules zijn idempotent: ze controleren de huidige staat en voeren alleen wijzigingen uit indien nodig \autocite{Hochstein2017AnsibleUpRunning}.
+
+\subsection{Idempotentie in Ansible}
+\label{subsec:ansible-idempotentie}
+
+Een belangrijk voordeel van Ansible is idempotentie: het systeem garandeert dat een configuratie in dezelfde toestand eindigt, ongeacht het aantal keer dat deze wordt toegepast \autocite{Geerling2020AnsibleDevOps}.
+
+Bij elke module-aanroep controleert Ansible eerst de huidige configuratie. 
+Als de gewenste staat al bereikt is, wordt "ok" gerapporteerd zonder wijzigingen. 
+Als de gewenste staat nog niet bereikt is, wordt "changed" gerapporteerd en wordt de configuratie aangepast \autocite{Hochstein2017AnsibleUpRunning}.
+
+Deze eigenschap heeft belangrijke voordelen:
+\begin{itemize}
+  \item Playbooks kunnen veilig opnieuw worden uitgevoerd
+  \item Partial failures kunnen worden opgelost door het playbook opnieuw te draaien
+  \item Drift detection: verschil tussen gewenste en huidige staat wordt automatisch gedetecteerd en gecorrigeerd
+\end{itemize}
+
+\subsection{Roles voor herbruikbaarheid}
+\label{subsec:ansible-roles}
+
+Ansible ondersteunt het gebruik van \textbf{roles}, waarmee configuratie wordt opgedeeld in herbruikbare bouwblokken \autocite{RedHat2024AnsibleDocs}. 
+Een role is een gestandaardiseerde mappenstructuur die tasks, variables, templates, files en handlers bevat.
+
+Voorbeeld van een role-structuur:
+
+\begin{verbatim}
+roles/
+  common/
+    tasks/
+      main.yml
+    vars/
+      main.yml
+    templates/
+      banner.j2
+    defaults/
+      main.yml
+\end{verbatim}
+
+Roles bieden belangrijke voordelen \autocite{Geerling2020AnsibleDevOps}:
+
+\textbf{Herbruikbaarheid}: Eenmaal ontwikkelde roles kunnen worden toegepast op meerdere projecten.
+Ansible Galaxy, een publieke repository, bevat duizenden community-developed roles \autocite{AnsibleGalaxy2024}.
+
+\textbf{Modulariteit}: Complexe configuraties worden opgesplitst in logische onderdelen, wat onderhoud vereenvoudigt.
+
+\textbf{Abstractie}: Roles kunnen parameters accepteren, waardoor dezelfde role met verschillende waarden kan worden gebruikt.
+
+\textbf{Testing}: Roles kunnen afzonderlijk worden getest met tools zoals Molecule \autocite{Molecule2024Docs}.
+
+In een bedrijfscontext is dit extreem waardevol voor consistent beheer. 
+Een "base\_switch\_config" role kan bijvoorbeeld standaard instellingen bevatten die op alle switches moeten worden toegepast (NTP, logging, SNMP, banners), terwijl specifieke roles VLAN-configuraties of routing-protocollen implementeren.
+
+\subsection{Jinja2 templating}
+\label{subsec:jinja2-templating}
+
+Ansible gebruikt de Jinja2 template engine voor het genereren van configuratiebestanden \autocite{RedHat2024AnsibleDocs}. 
+Dit maakt het mogelijk om dynamische configuraties te creëren op basis van variabelen.
+
+Voorbeeld van een
