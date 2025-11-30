@@ -63,40 +63,6 @@ Hieronder volgt een gestructureerde vergelijking van de meest relevante oplossin
 \textbf{Conclusie}:  
 Hoewel Puppet, Chef en Python-gebaseerde automatisatie elk waardevolle toepassingen hebben, is Ansible door zijn agentless-architectuur, leesbare YAML-configuraties en uitgebreide netwerkondersteuning het meest geschikt voor het doel van deze bachelorproef: schaalbare, consistente en foutreducerende netwerkautomatisatie binnen een kmo-context.
 
-<<<<<<< HEAD
-\section{Ansible in netwerkautomatisatie}
-\label{sec:ansible}
-
-Ansible werd oorspronkelijk ontwikkeld voor serverbeheer, maar is inmiddels een volwaardige NetDevOps-tool geworden.
-De werking steunt op drie kernelementen:
-
-\begin{enumerate}
-  \item \textbf{Inventories}: lijsten met netwerkapparaten
-  \item \textbf{Playbooks}: YAML-bestanden met de gewenste configuratiestappen
-  \item \textbf{Modules}: vooraf gebouwde functies voor configuratiebeheer
-\end{enumerate}
-
-Een belangrijk voordeel is idempotentie: het systeem garandeert dat een configuratie in dezelfde toestand eindigt, ongeacht het aantal keer dat deze wordt toegepast.
-
-Daarnaast laat Ansible het gebruik van \textbf{roles} toe, waarmee configuratie opgedeeld wordt in herbruikbare bouwblokken. 
-In een bedrijfscontext is dit extreem waardevol voor consistent beheer.
-
-\section{Ansible en Cisco IOS}
-\label{sec:cisco}
-
-Cisco heeft een eigen Ansible-collectie, \textbf{cisco.ios}, met modules voor interfacebeheer, routing, logging, Network Time Protocol (NTP) en Network Address Translation (NAT).
-De CLI-abstractie maakt Ansible bijzonder geschikt voor oudere toestellen die geen moderne API's ondersteunen.
-
-\section{Beperkingen en uitdagingen}
-\label{sec:beperkingen}
-
-Ondanks zijn sterke punten kent ook Ansible enkele beperkingen:
-
-\begin{itemize}
-  \item Manuele SSH-setup om Ansible te laten verbinden met de netwerktoestellen.
-  \item Fouten in een task kunnen volledige playbooks doen falen. Een voordeel hiervan is echter dat een foute configuratie niet wordt toegepast aangezien de playbooks falen voordat ze beginnen met de configuratie toe te passen.
-\end{itemize}
-=======
 Infrastructure as Code (IaC) is een manier waarbij infrastructuur beheerd wordt via machineleesbare configuratiebestanden in plaats van via manuele configuratie. 
 Dit concept, dat oorspronkelijk werd ontwikkeld voor serverbeheer, is inmiddels uitgebreid naar netwerkinfrastructuur.
 
@@ -167,16 +133,16 @@ Bijvoorbeeld:
 \begin{verbatim}
 1. Verbind met switch
 2. Ga naar configuratiemodus
-3. Maak VLAN 100 aan
-4. Geef VLAN 100 de naam "Sales"
-5. Wijs interface Gi0/1 toe aan VLAN 100
+3. Maak VLAN 10 aan
+4. Geef VLAN 10 de naam "Sales"
+5. Wijs interface Gi0/1 toe aan VLAN 10
 6. Sla configuratie op
 \end{verbatim}
 
 In declaratieve configuratie beschrijft men de gewenste eindtoestand, zonder te beschrijven hoe dat moet gebeuren \autocite{Morris2020}:
 \begin{verbatim}
-VLAN 100 moet bestaan
-VLAN 100 moet naam "Sales" hebben
+VLAN 10 moet bestaan
+VLAN 10 moet naam "Sales" hebben
 Interface Gi0/1 moet in VLAN 100 zitten
 \end{verbatim}
 
@@ -226,4 +192,3 @@ Doordat Ansible de mogelijkheid tot gelijktijdige configuratie biedt, kan men de
 
 \textbf{Conclusie}: Deze eigenschappen maken Ansible geschikt voor het doel van deze bachelorproef: snellere, reproduceerbare en consistente, schaalbare en foutreducerende netwerkconfiguratie binnen een kmo-context.
 
->>>>>>> 91fdcfc (vervolg literatuurstudie)
