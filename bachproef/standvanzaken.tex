@@ -6,11 +6,20 @@
 
 Constante beschikbaarheid is de dag van vandaag zeer belangrijk in een bedrijfscontext.
 Niet beschikbaar zijn, is voor bedrijven meer dan een kwestie van hun website die niet beschikbaar is. 
-Downtime brengt ook grote kosten met zich mee. Zo toont een onderzoek van het Uptime Instute aan dat downtime voor 54\% van respondenten van hun enquête kosten van meer dan \$100.000 met zich mee brengt, en voor 1 in 5 respondenten liep dit op naar meer dan \$1.000.000 \autocite{UptimeInstitute2025}.
-Dit onderzoek toont ook dat netwerk- en/of connectiviteitproblemen de oorzaak zijn van 34\% van IT-gerelateerde downtime. Een netwerk met 20 netwerktoestellen configureren vraagt om honderden configuratieregels, wat op zijn beurt honderden kansen op voor een menselijke fout biedt. 
-Netwerken worden traditioneel via de command line interface (CLI) geconfigureerd.
-Hoewel dit volledige controle geeft, toont het onderzoek van Uptime Institute aan dat menselijke fouten bijdragen tot 40\% van fouten die downtime veroorzaken. Menselijke interactie minimaliseren bij netwerkconfiguratie zou dus een perfecte oplossing kunnen bieden. 
-Automatisatie biedt een antwoord op deze problemen door configuraties te centraliseren, sneller, reproduceerbaar en consistent, schaalbaar en foutloos te maken \autocite{Wagbrant2022}. 
+Downtime brengt ook grote kosten met zich mee. Zo toont een onderzoek van het Uptime Institute aan dat downtime voor 54\% van respondenten van hun enquête kosten van meer dan \$100.000 met zich mee brengt, en voor 1 in 5 respondenten liep dit op naar meer dan \$1.000.000 \autocite{UptimeInstitute2025}. 
+Dit onderzoek toont ook dat netwerk- en/of connectiviteitproblemen de oorzaak zijn van 34\% van IT-gerelateerde downtime. 
+Een netwerk met 20 netwerktoestellen configureren vraagt om honderden configuratieregels, wat op zijn beurt honderden kansen voor een menselijke fout biedt.
+Netwerken worden traditioneel via de command line interface (CLI) geconfigureerd. 
+Hoewel dit volledige controle geeft, toont het onderzoek van Uptime Institute aan dat menselijke fouten bijdragen tot 40\% van fouten die downtime veroorzaken \autocite{UptimeInstitute2025}. 
+Menselijke interactie minimaliseren bij netwerkconfiguratie zou dus een perfecte oplossing kunnen bieden. Volgens \textcite{Gartner2023} gebeurd meer dan 65\% van alle netwerktaken manueel, hoewel er wel een stijgende trend is in het aantal bedrijven die meer dan de helft van hun netwerktaken automatiseren. 
+Deze inefficiëntie heeft niet alleen impact op de operationele kosten, maar ook op de innovatiecapaciteit van IT-afdelingen. 
+De complexiteit van moderne netwerken neemt ook toe. 
+Uit cijfers van \textcite{shi2021devicegrowth} blijkt dat het totaal aantal netwerk- en verbonden apparaten wereldwijd tussen 2016 en 2021 is gestegen van 17,1 miljard naar 27,1 miljard, een toename van ongeveer 58\%. 
+Hoewel er geen specifieke wereldwijde cijfers beschikbaar zijn voor de groei in afzonderlijke netwerkcomponenten zoals switches, routers en access points, kan logischerwijs worden aangenomen dat deze categorieën meegroeien met het totale aantal verbonden apparaten. 
+Deze apparaten vormen immers de infrastructuur die nodig is om de groeiende hoeveelheid verbonden eindpunten te ondersteunen. 
+Deze grotere, complexere netwerken zorgen ervoor dat automatisatie geen luxe meer is, maar een noodzaak. 
+Automatisatie biedt een antwoord op deze problemen door configuraties te centraliseren, sneller, reproduceerbaar en consistent, schaalbaar en foutloos te maken \autocite{Wagbrant2022}. 
+Volgens \textcite{Mahant2024networkautomation} kunnen organisaties die netwerkautomatisering implementeren hun configuratietijd met ~85\% reduceren en het aantal configuratiefouten verminderen met 78\%.
 
 \section{Vergelijking van automatiseringstools}
 \label{sec:tools}
@@ -19,29 +28,42 @@ Binnen netwerk- en infrastructuurautomatisatie bestaan meerdere tools die config
 Hoewel ze vergelijkbare doelen nastreven, verschillen ze sterk in architectuur, werkwijze en geschiktheid voor traditionele netwerkapparatuur zoals routers en switches. 
 Hieronder volgt een gestructureerde vergelijking van de meest relevante oplossingen.
 
+\subsection{Agent-based versus agentless architectuur}
+\label{subsec:agent-vs-agentless} 
+
+Een fundamenteel onderscheid tussen automatiseringstools is of ze een agent vereisen op de managed nodes. 
+
+\textbf{Agent-based tools} zoals Puppet en Chef installeren software op elk te beheren systeem. 
+Deze agent communiceert met een centrale server en voert configuratiewijzigingen uit. 
+Het voordeel is dat agents proactief de gewenste state kunnen handhaven door regelmatig te controleren en corrigeren. 
+Het nadeel is dat agents resources consumeren, zelf moeten worden beheerd en niet op alle netwerktoestellen beschikbaar zijn. 
+
+\textbf{Agentless tools} zoals Ansible werken via standaardprotocollen zoals SSH of API's zonder dat er software hoeft te worden geïnstalleerd op de te configureren toestellen. 
+Dit maakt ze bijzonder geschikt voor netwerktoestellen die geen mogelijkheid bieden om third-party software te installeren. 
+Het nadeel is dat configuratiewijzigingen moet worden gepushed vanuit een centrale control node in plaats van dat nodes proactief hun staat handhaven.
+
 \begin{itemize}
 
-  \item \textbf{Puppet}  
+  \item \textbf{Puppet}  \autocite{PuppetLabsDocs}
         \begin{itemize}
           \item Agent-based architectuur: elk toestel vereist een Puppet-agent.
           \item Declaratieve configuratietaal.
           \item Minder bruikbaar op klassieke netwerktoestellen waar geen agent kan draaien.
         \end{itemize}
 
-  \item \textbf{Chef}  
+  \item \textbf{Chef}  \autocite{ChefSoftwareDocs}
         \begin{itemize}
           \item Agent-based, gebruikt een centrale Chef-server.
           \item Configuraties worden geschreven in Ruby.
-          \item Hoge uitbreidbaarheid maar steile leercurve.
-          \item Beperkt inzetbaar voor netwerkapparaten zonder agent-ondersteuning.
+          \item Hoge uitbreidbaarheid maar steile leercurve door de nood aan programmeerkennis in Ruby.
+          \item Beperkt inzetbaar voor netwerktoestellen waar geen agent kan worden geïnstalleerd.
         \end{itemize}
 
-
-  \item \textbf{Ansible}  
+  \item \textbf{Ansible}  \autocite{AnsibleDocs}
         \begin{itemize}
-          \item Volledig agentless: werkt via SSH of API's, ideaal voor netwerkapparaten.
+          \item Volledig agentless: werkt via SSH of API's, ideaal voor netwerktoestellen.
           \item Configuraties worden beschreven in YAML, zeer leesbaar en toegankelijk.
-          \item Grote collectie netwerkmodules (\emph{Cisco IOS}, \emph{IOS-XE}, \emph{NX-OS}, \emph{Arista EOS}, \emph{JunOS}, ...).
+          \item Grote collectie netwerkmodules (\emph{Cisco IOS}, \emph{IOS-XE}, \emph{NX-OS}, \emph{Arista EOS}, \emph{JunOS}, ...). \autocite{AnsibleCommunityNetworkModules}
         \end{itemize}
 
   \item \textbf{Python (met Netmiko, NAPALM, Paramiko)}  
@@ -63,11 +85,12 @@ Hieronder volgt een gestructureerde vergelijking van de meest relevante oplossin
 \textbf{Conclusie}:  
 Hoewel Puppet, Chef en Python-gebaseerde automatisatie elk waardevolle toepassingen hebben, is Ansible door zijn agentless-architectuur, leesbare YAML-configuraties en uitgebreide netwerkondersteuning het meest geschikt voor het doel van deze bachelorproef: schaalbare, consistente en foutreducerende netwerkautomatisatie binnen een kmo-context.
 
-Infrastructure as Code (IaC) is een manier waarbij infrastructuur beheerd wordt via machineleesbare configuratiebestanden in plaats van via manuele configuratie. 
-Dit concept, dat oorspronkelijk werd ontwikkeld voor serverbeheer, is inmiddels uitgebreid naar netwerkinfrastructuur.
 
 \subsection{Infrastructure as Code best practices}
 \label{subsec:iac-best-practices}
+
+Infrastructure as Code (IaC) is een manier waarbij infrastructuur beheerd wordt via machineleesbare configuratiebestanden in plaats van via manuele configuratie. 
+Dit concept, dat oorspronkelijk werd ontwikkeld voor serverbeheer, is inmiddels uitgebreid naar netwerkinfrastructuur.
 
 Bij het implementeren van IaC voor netwerken zijn er enkele fundamentele best practices:
 
