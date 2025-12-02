@@ -215,3 +215,67 @@ Doordat Ansible de mogelijkheid tot gelijktijdige configuratie biedt, kan men de
 
 \textbf{Conclusie}: Deze eigenschappen maken Ansible geschikt voor het doel van deze bachelorproef: snellere, reproduceerbare en consistente, schaalbare en foutreducerende netwerkconfiguratie binnen een kmo-context.
 
+\section{Ansible in netwerkautomatisering}
+\label{sec:ansible}
+
+Ansible werd oorspronkelijk ontwikkeld door Michael DeHaan in 2012 voor serverbeheer en werd in 2015 overgenomen door Red Hat, inmiddels is het een volwaardige NetDevOps-tool geworden met uitgebreide ondersteuning voor netwerkapparatuur.
+
+\subsection{Ansible architectuur}
+\label{subsec:ansible-architectuur}
+
+De Ansible-architectuur bestaat uit drie hoofdcomponenten:
+
+\textbf{Control node}: De machine waarop Ansible is geïnstalleerd en van waaruit playbooks worden uitgevoerd. 
+Dit kan een laptop, server of CI/CD-systeem (Continuous Integration en Continuous Delivery) zijn. 
+De control node heeft Python nodig maar legt verder minimale eisen op.
+
+\textbf{Managed nodes}: De systemen die door Ansible worden beheerd.
+Voor netwerkapparaten is alleen SSH nodig; Ansible communiceert via de CLI.
+
+\textbf{Inventory}: Een bestand (of dynamische bron) dat definieert welke nodes moeten worden beheerd en hoe ze worden gegroepeerd. 
+Inventories kunnen statisch (YAML- of INI-bestanden) of dynamisch (scripts die nodes ophalen uit externe bronnen) zijn.
+
+\subsection{Kernconcepten}
+\label{subsec:ansible-kernconcepten}
+
+De werking van Ansible steunt op zes kernelementen, 3 daarvan zijn van belang voor dit onderzoek en worden hieronder uitgelegd \autocite{AnsibleArchitecture}:
+
+\subsubsection{Inventories}
+\label{subsubsec:inventories}
+
+Een inventory is een lijst met managed nodes, optioneel georganiseerd in groepen. 
+Het meegegeven IP-adres stelt Ansible er toe in staat te weten hoe de managed node aangesproken moet worden.
+Een eenvoudig voorbeeld:
+
+\begin{verbatim}
+[switches]
+sw1 ansible_host=192.168.1.10
+sw2 ansible_host=192.168.1.11
+sw3 ansible_host=192.168.1.12
+
+[routers]
+r1 ansible_host=192.168.1.1
+r2 ansible_host=192.168.1.2
+
+[cisco:children]
+switches
+routers
+
+\end{verbatim}
+
+In het bovenstaandde voorbeeld worden drie switches gedefiniëerd, in een groep 'switches' en twee routers, in een groep 'routers'. 
+Er wordt ook een geneste groep 'cisco' gedefiniëerd waaronder de groepen switches en routers vallen. 
+Doordat er groepen zijn gemaakt kan de netwerkadministrator kiezen welke toestellen hij aanspreekt:
+
+\begin{itemize}
+  \item \textbf{specifiek toestel}: operaties zullen enkel op het gekozen toestel uitgevoerd worden.
+  \item \textbf{groep}: operaties zullen op alle toestellen die in deze groep zitten uitgevoerd worden.
+  \item \textbf{geneste groep}: operaties zullen op alle toestellen die in de groepen in deze geneste groep zitten uitgevoerd worden.
+\end{itemize}
+
+Inventories ondersteunen dus operaties en variabelen op host- en groepsniveau, waardoor configuraties kunnen worden aangepast per toestel of groep.
+Een voordeel hiervan is dat basisopstellingen vaak grotendeels hetzelfde zijn voor netwerktoestellen en dus met één enkel playbook op alle toestellen toegepast kan worden.
+
+\subsubsection{Playbooks}
+\label{subsubsec:playbooks}
+
