@@ -32,11 +32,13 @@ Hieronder volgt een gestructureerde vergelijking van de meest relevante oplossin
 \label{subsec:agent-vs-agentless} 
 
 Een fundamenteel onderscheid tussen automatiseringstools is of ze een agent vereisen op de managed nodes. 
+\vspace{1em}
 
 \textbf{Agent-based tools} zoals Puppet en Chef installeren software op elk te beheren systeem. 
 Deze agent communiceert met een centrale server en voert configuratiewijzigingen uit. 
 Het voordeel is dat agents proactief de gewenste state kunnen handhaven door regelmatig te controleren en corrigeren. 
 Het nadeel is dat agents resources consumeren, zelf moeten worden beheerd en niet op alle netwerktoestellen beschikbaar zijn. 
+\vspace{1em}
 
 \textbf{Agentless tools} zoals Ansible werken via standaardprotocollen zoals SSH of API's zonder dat er software hoeft te worden geïnstalleerd op de te configureren toestellen. 
 Dit maakt ze bijzonder geschikt voor netwerktoestellen die geen mogelijkheid bieden om third-party software te installeren. 
@@ -83,7 +85,59 @@ Het nadeel is dat configuratiewijzigingen moet worden gepushed vanuit een centra
 \end{itemize}
 
 \textbf{Conclusie}:  
-Hoewel Puppet, Chef en Python-gebaseerde automatisatie elk waardevolle toepassingen hebben, is Ansible door zijn agentless-architectuur, leesbare YAML-configuraties en uitgebreide netwerkondersteuning het meest geschikt voor het doel van deze bachelorproef: schaalbare, consistente en foutreducerende netwerkautomatisatie binnen een kmo-context.
+Hoewel Puppet, Chef en Python-gebaseerde automatisatie elk waardevolle toepassingen hebben, werd gekozen voor Ansible door zijn agentless-architectuur, 
+leesbare YAML-configuratie en uitgebreide netwerkondersteuning. Deze elementen maken Ansible het meest geschikt voor het doel van deze bachelorproef: 
+schaalbare, consistente en foutreducerende netwerkautomatisatie binnen een kmo-context.
+
+\subsection{Keuze voor Ansible}
+\label{subsec:keuze-ansible}
+
+Voor deze bachelorproef is gekozen voor Ansible om de volgende redenen:
+\vspace{1em}
+
+\textbf{Agentless architectuur}: Traditionele netwerkapparatuur zoals Cisco routers en switches bieden geen mogelijkheid om configuratie-agents te installeren. 
+Dankzij de agentless aanpak van Ansible kan de configuratie van deze toestellen toch geautomatiseerd worden via SSH, zonder dat er wijzigingen aan de firmware of extra software op het apparaat nodig zijn.
+\vspace{1em}
+
+\textbf{Lage instapdrempel}: YAML is een zeer leesbare configuratietaal die geen programmeerkennis vereist. 
+Dit maakt Ansible toegankelijk voor netwerkadministratoren die geen of een zeer beperkte kennis van programmeren hebben \autocite{Geerling2020}.
+In een kmo-context, waar teams vaak kleiner zijn en minder gespecialiseerd, is een lage instapdrempel van groot belang.
+\vspace{1em}
+
+\textbf{Uitgebreide netwerkondersteuning}: Ansible heeft een grote collectie modules die specifiek zijn ontwikkeld voor populaire netwerkapparatuur, waaronder Cisco toestellen \autocite{AnsibleCiscoIOS}. 
+Deze modules bieden een mogelijkheid een out-of-the-box oplossing voor veelvoorkomende netwerkconfiguraties.
+Voor meer specifieke configuraties kunnen aangepaste modules worden ontwikkeld, kan gebruik worden gemaakt van Jinja2-templates om configuraties dynamisch te genereren op basis van variabelen of kunnen commandos worden meegeven zoals ze manueel in de CLI zouden worden meegegeven.
+De cisco.ios collection biedt ondersteuning voor Cisco IOS-toestellen, wat relevant is voor deze proof-of-concept.
+\vspace{1em}
+
+\textbf{Community en documentatie}: Als populaire configuratietool heeft Ansible een grote, actieve community die hulp kan bieden. 
+Daarnaast heeft Ansible uitgebreide documentatie, zowel voor de basisopstelling van een Ansible omgeving als elke module die ter beschikking is. 
+Deze elementen zijn een grote meerwaarde voor troubleshooting en kennisuitwisseling.
+\vspace{1em}
+
+\textbf{Schaalbaarheid}: 
+Ansible is ontworpen om zowel kleine als zeer grote omgevingen efficiënt te beheren. 
+De agentless architectuur zorgt ervoor dat extra netwerktoestellen geen bijkomende 
+software-installatie vereisen, wat de operationele overhead minimaal houdt. Bovendien 
+ondersteunt Ansible \textit{parallel execution}, waardoor tientallen en zelfs honderden 
+routers en switches gelijktijdig geconfigureerd kunnen worden. Dit maakt Ansible geschikt 
+voor kmo's die groeien en later willen opschalen naar complexere netwerkomgevingen.
+\vspace{1em}
+
+Daarnaast maakt het gebruik van een \textit{inventory-abstractie}, waarbij toestellen in 
+groepen kunnen worden beheerd en geparametriseerd, het mogelijk om configuraties consistent 
+en herhaalbaar toe te passen op grote aantallen apparaten. Volgens \textcite{Morris2020} 
+is schaalbare, geautomatiseerde configuratie een kernprincipe van Infrastructure as Code, 
+omdat het toelaat om zonder manuele tussenkomst grote aantallen systemen te beheren. 
+\vspace{1em}
+
+\textbf{Tijdbesparing}:
+De gelijktijdige configuratie van tientallen en tot honderden toestellen biedt naast schaalbaarheid ook een enorme tijdbesparing.
+Bij een manuele configuratie zou één enkele netwerkadministrator elk netwerktoestel één voor één en lijn per lijn moeten configureren, wat bij een groot netwerk snel kan uitlopen tot uren en soms dagen.
+Doordat Ansible de mogelijkheid tot gelijktijdige configuratie biedt, kan men de tijd die nodig is voor het configureren van een groot aantal toestellen drastisch verminderen. 
+\vspace{1em}
+
+\textbf{Conclusie}: Deze eigenschappen maken Ansible geschikt voor het doel van deze bachelorproef: snellere, reproduceerbare en consistente, schaalbare en foutreducerende netwerkconfiguratie binnen een kmo-context.
 
 
 \subsection{Infrastructure as Code best practices}
@@ -91,20 +145,25 @@ Hoewel Puppet, Chef en Python-gebaseerde automatisatie elk waardevolle toepassin
 
 Infrastructure as Code (IaC) is een manier waarbij infrastructuur beheerd wordt via machineleesbare configuratiebestanden in plaats van via manuele configuratie. 
 Dit concept, dat oorspronkelijk werd ontwikkeld voor serverbeheer, is inmiddels uitgebreid naar netwerkinfrastructuur.
+\vspace{1em}
 
 Bij het implementeren van IaC voor netwerken zijn er enkele fundamentele best practices:
+\vspace{1em}
 
 \textbf{Idempotentie}: Configuraties moeten hetzelfde resultaat opleveren, ongeacht hoe vaak ze worden toegepast \autocite{Middleware2013}. 
 Dit principe, centraal in tools zoals Ansible, garandeert voorspelbaarheid en voorkomt ongewenste wijzigingen.
 Een idempotente operatie kan veilig meerdere keren worden uitgevoerd zonder neveneffecten.
+\vspace{1em}
 
 \textbf{Declaratieve configuratie}: In plaats van te specificeren hoe een configuratie moet worden toegepast (imperatief), beschrijft men de gewenste eindtoestand (declaratief) \autocite{Endres2017}. 
 Het systeem zorgt ervoor dat de infrastructuur in deze toestand wordt gebracht.
 Dit abstractieniveau maakt configuraties leesbaarder en onderhoudsvriendelijker.
+\vspace{1em}
 
 \textbf{Modulaire architectuur}: Configuraties worden opgesplitst in herbruikbare modules of rollen. 
 Dit bevordert consistentie en versnelt het uitrollen van nieuwe toestellen.
 In Ansible-context worden deze modules \textbf{roles} genoemd.
+\vspace{1em}
 
 \textbf{Immutable infrastructure}: In plaats van bestaande configuraties aan te passen, worden nieuwe configuraties volledig opnieuw uitgerold. 
 Dit principe, hoewel uitdagender voor netwerkapparatuur dan voor servers, verkleint de kans op configuration drift.
@@ -116,11 +175,13 @@ Dit principe, hoewel uitdagender voor netwerkapparatuur dan voor servers, verkle
 \label{subsec:idempotentie}
 
 Idempotentie is een concept dat betekent dat een operatie meerdere keren kan worden uitgevoerd zonder dat het resultaat verandert, ongeacht of het één keer of meermaals uitgevoerd wordt \autocite{Geerling2020}.
+\vspace{1em}
 
 Beschouw bijvoorbeeld de configuratie van een VLAN. Een idempotente operatie 
 controleert eerst of VLAN 10 al bestaat. Indien dat het geval is, wordt geen actie 
 ondernomen; indien niet, wordt het VLAN aangemaakt. Een tweede uitvoering van 
 dezelfde taak verandert dus niets.
+\vspace{1em}
 
 Niet-idempotente operaties kunnen echter wel tot foutieve of ongewenste 
 configuraties leiden. Een veelvoorkomend voorbeeld is het automatisch toevoegen 
@@ -144,6 +205,7 @@ Dergelijke duplicaten vergroten de complexiteit van access-lists, bemoeilijken
 troubleshooting en kunnen zelfs de verwerkingsvolgorde van ACL's beïnvloeden. Dit 
 illustreert hoe niet-idempotente automatisatie kan leiden tot configuratiedrift en 
 fouten, en benadrukt het belang van idempotentie binnen netwerkautomatisering.
+\vspace{1em}
 
 Dit principe is essentieel voor betrouwbare automatisering omdat het betekent dat playbooks veilig opnieuw kunnen worden uitgevoerd zonder ongewenste neveneffecten \autocite{Geerling2020}. 
 Het maakt ook troubleshooting eenvoudiger: als een playbook halverwege faalt, kan het gewoon opnieuw worden gestart zonder dat eerdere stappen handmatig moeten worden teruggedraaid.
@@ -166,59 +228,16 @@ In declaratieve configuratie beschrijft men de gewenste eindtoestand, zonder te 
 \begin{verbatim}
 VLAN 10 moet bestaan
 VLAN 10 moet naam "Sales" hebben
-Interface Gi0/1 moet in VLAN 100 zitten
+Interface Gi0/1 moet in VLAN 10 zitten
 \end{verbatim}
 
 Het voordeel van de declaratieve benadering is dat je je niet hoeft bezig te houden met alle implementatiestappen, maar enkel aangeeft wat je uiteindelijk wilt bereiken.
 Dit maakt configuraties leesbaarder, onderhoudsvriendelijker en platform-onafhankelijker.
 Ansible gebruikt voornamelijk een declaratieve benadering, hoewel het ook imperatieve elementen ondersteunt waar nodig.
 
-\subsection{Keuze voor Ansible}
-\label{subsec:keuze-ansible}
-
-Voor deze bachelorproef is gekozen voor Ansible om de volgende redenen:
-
-\textbf{Agentless architectuur}: Traditionele netwerkapparatuur zoals Cisco routers en switches bieden geen mogelijkheid om configuratie-agents te installeren. 
-Dankzij de agentless aanpak van Ansible kan de configuratie van deze toestellen toch geautomatiseerd worden via SSH, zonder dat er wijzigingen aan de firmware of extra software op het apparaat nodig zijn.
-
-\textbf{Lage instapdrempel}: YAML is een zeer leesbare configuratietaal die geen programmeerkennis vereist. 
-Dit maakt Ansible toegankelijk voor netwerkadministratoren die geen of een zeer beperkte kennis van programmeren hebben \autocite{Geerling2020}.
-In een kmo-context, waar teams vaak kleiner zijn en minder gespecialiseerd, is een lage instapdrempel van groot belang.
-
-\textbf{Uitgebreide netwerkondersteuning}: Ansible heeft een grote collectie modules die specifiek zijn ontwikkeld voor populaire netwerkapparatuur, waaronder Cisco toestellen \autocite{AnsibleCiscoIOS}. 
-Deze modules bieden een mogelijkheid een out-of-the-box oplossing voor veelvoorkomende netwerkconfiguraties.
-Voor meer specifieke configuraties kunnen aangepaste modules worden ontwikkeld, kan gebruik worden gemaakt van Jinja2-templates om configuraties dynamisch te genereren op basis van variabelen of kunnen commandos worden meegeven zoals ze manueel in de CLI zouden worden meegegeven.
-De cisco.ios collection biedt ondersteuning voor Cisco IOS-toestellen, wat relevant is voor deze proof-of-concept.
-
-\textbf{Community en documentatie}: Als populaire configuratietool heeft Ansible een grote, actieve community die hulp kan bieden. 
-Daarnaast heeft Ansible uitgebreide documentatie, zowel voor de basisopstelling van een Ansible omgeving als elke module die ter beschikking is. 
-Deze elementen zijn een grote meerwaarde voor troubleshooting en kennisuitwisseling.
-
-\textbf{Schaalbaarheid}: 
-Ansible is ontworpen om zowel kleine als zeer grote omgevingen efficiënt te beheren. 
-De agentless architectuur zorgt ervoor dat extra netwerktoestellen geen bijkomende 
-software-installatie vereisen, wat de operationele overhead minimaal houdt. Bovendien 
-ondersteunt Ansible \textit{parallel execution}, waardoor tientallen en zelfs honderden 
-routers en switches gelijktijdig geconfigureerd kunnen worden. Dit maakt Ansible geschikt 
-voor kmo's die groeien en later willen opschalen naar complexere netwerkomgevingen.
-
-Daarnaast maakt het gebruik van een \textit{inventory-abstractie}, waarbij toestellen in 
-groepen kunnen worden beheerd en geparametriseerd, het mogelijk om configuraties consistent 
-en herhaalbaar toe te passen op grote aantallen apparaten. Volgens \textcite{Morris2020} 
-is schaalbare, geautomatiseerde configuratie een kernprincipe van Infrastructure as Code, 
-omdat het toelaat om zonder manuele tussenkomst grote aantallen systemen te beheren. 
-
-\textbf{Tijdbesparing}:
-De gelijktijdige configuratie van tientallen en tot honderden toestellen biedt naast schaalbaarheid ook een enorme tijdbesparing.
-Bij een manuele configuratie zou één enkele netwerkadministrator elk netwerktoestel één voor één en lijn per lijn moeten configureren, wat bij een groot netwerk snel kan uitlopen tot uren en soms dagen.
-Doordat Ansible de mogelijkheid tot gelijktijdige configuratie biedt, kan men de tijd die nodig is voor het configureren van een groot aantal toestellen drastisch verminderen. 
-
-\textbf{Conclusie}: Deze eigenschappen maken Ansible geschikt voor het doel van deze bachelorproef: snellere, reproduceerbare en consistente, schaalbare en foutreducerende netwerkconfiguratie binnen een kmo-context.
 
 \section{Ansible in netwerkautomatisering}
 \label{sec:ansible}
-
-Ansible werd oorspronkelijk ontwikkeld door Michael DeHaan in 2012 voor serverbeheer en werd in 2015 overgenomen door Red Hat, inmiddels is het een volwaardige NetDevOps-tool geworden met uitgebreide ondersteuning voor netwerkapparatuur.
 
 \subsection{Ansible architectuur}
 \label{subsec:ansible-architectuur}
@@ -228,15 +247,17 @@ De Ansible-architectuur bestaat uit drie hoofdcomponenten:
 \textbf{Control node}: De machine waarop Ansible is geïnstalleerd en van waaruit playbooks worden uitgevoerd. 
 Dit kan een laptop, server of CI/CD-systeem (Continuous Integration en Continuous Delivery) zijn. 
 De control node heeft Python nodig maar legt verder minimale eisen op.
+\vspace{1em}
 
 \textbf{Managed nodes}: De systemen die door Ansible worden beheerd.
 Voor netwerkapparaten is alleen SSH nodig; Ansible communiceert via de CLI.
+\vspace{1em}
 
 \textbf{Inventory}: Een bestand (of dynamische bron) dat definieert welke nodes moeten worden beheerd en hoe ze worden gegroepeerd. 
 Inventories kunnen statisch (YAML- of INI-bestanden) of dynamisch (scripts die nodes ophalen uit externe bronnen) zijn.
 
-\subsection{Kernconcepten}
-\label{subsec:ansible-kernconcepten}
+\subsection{Kernelementen}
+\label{subsec:ansible-kernelementen}
 
 De werking van Ansible steunt op zes kernelementen, 3 daarvan zijn van belang voor dit onderzoek en worden hieronder uitgelegd \autocite{AnsibleArchitecture}:
 
@@ -278,4 +299,97 @@ Een voordeel hiervan is dat basisopstellingen vaak grotendeels hetzelfde zijn vo
 
 \subsubsection{Playbooks}
 \label{subsubsec:playbooks}
+
+Playbooks zijn YAML-bestanden die de gewenste configuratiestappen beschrijven. 
+Een playbook bestaat uit een of meerdere \emph{plays}, waarbij elke play een reeks \emph{tasks} definieert die op een groep hosts worden uitgevoerd.
+
+\vspace{1em}
+
+Voorbeeld van een eenvoudig playbook, met een \emph{play} die op alle switches de VLANs configureerd en \emph{tasks} die de eindtoestand van elke VLAN beschrijven:
+
+\begin{verbatim}
+---
+- name: Configure VLANs on switches
+  hosts: switches
+  gather_facts: no
+  
+  tasks:
+    - name: Create VLAN 10
+      cisco.ios.ios_vlan:
+        vlan_id: 10
+        name: Sales
+        state: present
+    
+    - name: Create VLAN 20
+      cisco.ios.ios_vlan:
+        vlan_id: 20
+        name: HR
+        state: present
+\end{verbatim}
+
+Playbooks kunnen zowel simpele taken bevat, zoals heirboven getoond, als complexe logica bevatten met conditionals, loops en error handling.
+De YAML-syntax maakt de playbooks leesbaar voor zowel mensen als machines.
+
+\subsubsection{Modules}
+\label{subsubsec:modules}
+
+Modules zijn vooraf gebouwde functies die specifieke taken uitvoeren. 
+Ansible heeft duizenden modules, waaronder honderden specifiek voor netwerkautomatisering.
+
+In dit onderzoek wordt de cisco.ios module gebruikt, hieronder enkele voorbeelden van de modules:
+\begin{itemize}
+  \item \texttt{cisco.ios.ios\_config}: Voor algemene IOS-configuratie
+  \item \texttt{cisco.ios.ios\_vlan}: Voor VLAN-beheer
+  \item \texttt{cisco.ios.ios\_interface}: Voor interface-configuratie
+  \item \texttt{cisco.ios.ios\_static\_route}: Voor static routing
+  \item \texttt{cisco.ios.ios\_logging}: Voor logging-configuratie
+\end{itemize}
+
+Modules zijn ook idempotent: ze controleren de huidige staat en voeren alleen wijzigingen uit indien nodig \autocite{Hochstein2017AnsibleUpRunning}.
+\vspace{1em}
+
+Bij elke module-aanroep controleert Ansible eerst de huidige configuratie. 
+Als de gewenste staat al bereikt is, wordt "ok" gerapporteerd zonder wijzigingen. 
+Als de gewenste staat nog niet bereikt is, wordt "changed" gerapporteerd en wordt de configuratie aangepast \autocite{Hochstein2017AnsibleUpRunning}.
+
+Deze eigenschap heeft belangrijke voordelen:
+\begin{itemize}
+  \item Playbooks kunnen veilig opnieuw worden uitgevoerd
+  \item Deels gefaalde playbooks kunnen worden opgelost door het playbook opnieuw te draaien
+  \item Drift detection: verschil tussen gewenste en huidige staat wordt automatisch gedetecteerd en gecorrigeerd
+\end{itemize}
+
+
+\subsubsection{Roles voor herbruikbaarheid}
+\label{subsubsec:ansible-roles}
+
+Ansible ondersteunt het gebruik van \textbf{roles}, waarmee configuratie wordt opgedeeld in herbruikbare bouwblokken. 
+Een role is een gestandaardiseerde mappenstructuur die tasks, variables, templates, files en handlers bevat.
+
+Voorbeeld van een role-structuur:
+
+\begin{verbatim}
+roles/
+  common/
+    tasks/
+      main.yml
+    vars/
+      main.yml
+    templates/
+      banner.j2
+    defaults/
+      main.yml
+\end{verbatim}
+
+Roles bieden belangrijke voordelen:
+
+\textbf{Herbruikbaarheid}: Eenmaal ontwikkelde roles kunnen worden toegepast op meerdere projecten.
+Ansible Galaxy, een publieke repository, bevat duizenden community-developed roles.
+\vspace{1em}
+
+\textbf{Modulariteit}: Complexe configuraties worden opgesplitst in logische onderdelen, wat onderhoud vereenvoudigt.
+\vspace{1em}
+
+\textbf{Abstractie}: Roles accepteren parameters, waardoor éénzelfde role met verschillende waarden kan worden gebruikt.
+\vspace{1em}
 
