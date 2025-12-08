@@ -36,7 +36,7 @@ Een fundamenteel onderscheid tussen automatiseringstools is of ze een agent vere
 
 \textbf{Agent-based tools} zoals Puppet en Chef installeren software op elk te beheren systeem. 
 Deze agent communiceert met een centrale server en voert configuratiewijzigingen uit. 
-Het voordeel is dat agents proactief de gewenste state kunnen handhaven door regelmatig te controleren en corrigeren. 
+Het voordeel is dat agents proactief de gewenste state kunnen handhaven door regelmatig te controleren en te corrigeren. 
 Het nadeel is dat agents resources consumeren, zelf moeten worden beheerd en niet op alle netwerktoestellen beschikbaar zijn. 
 \vspace{1em}
 
@@ -106,10 +106,10 @@ In een kmo-context, waar teams vaak kleiner zijn en minder gespecialiseerd, is e
 
 \textbf{Uitgebreide netwerkondersteuning}: Ansible heeft een grote collectie modules die specifiek zijn ontwikkeld voor populaire netwerkapparatuur, waaronder Cisco toestellen \autocite{AnsibleCiscoIOS}. 
 Deze modules bieden een mogelijkheid een out-of-the-box oplossing voor veelvoorkomende netwerkconfiguraties.
-Voor meer specifieke configuraties kunnen aangepaste modules worden ontwikkeld, kan gebruik worden gemaakt van Jinja2-templates om configuraties dynamisch te genereren op basis van variabelen of kunnen commandos worden meegeven zoals ze manueel in de CLI zouden worden meegegeven.
+Voor meer specifieke configuraties kunnen aangepaste modules worden ontwikkeld. Er kan gebruik worden gemaakt van Jinja2-templates om configuraties dynamisch te genereren op basis van variabelen of kunnen commando's worden meegeven zoals ze handmatig in de CLI zouden worden meegegeven.
 De cisco.ios collection biedt ondersteuning voor Cisco IOS-toestellen, wat relevant is voor deze proof-of-concept.
-\vspace{1em}
 
+\vspace{1em}
 \textbf{Community en documentatie}: Als populaire configuratietool heeft Ansible een grote, actieve community die hulp kan bieden. 
 Daarnaast heeft Ansible uitgebreide documentatie, zowel voor de basisopstelling van een Ansible omgeving als elke module die ter beschikking is. 
 Deze elementen zijn een grote meerwaarde voor troubleshooting en kennisuitwisseling.
