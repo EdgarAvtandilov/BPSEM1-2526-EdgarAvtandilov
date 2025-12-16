@@ -1,9 +1,12 @@
 ---
-- name: Configure system settings (combined)
+- name: Set host- and domain name
+  cisco.ios.ios_system:
+    hostname: "{{ inventory_hostname }}"
+    domain_name: "{{ domain_name }}"
+
+- name: default config
   cisco.ios.ios_config:
     lines:
-      - hostname {{ inventory_hostname }}
-      - ip domain-name {{ domain_name }}
       - service password-encryption
       - service timestamps log datetime msec
       - username ansible privilege 15 secret {{ vault_login_password }}
@@ -12,17 +15,20 @@
       - logging host {{ logging_host }}
       - logging trap informational
       - ntp server {{ ntp_server }} prefer
-      - |
-        banner motd ^C
-        {{ banner_motd }}
-        ^C
-    match: line
   register: config_result
 
-- name: Configure VTY lines for SSH
+- name: Configure banner
+  cisco.ios.ios_banner:
+    banner: motd
+    text: "{{ banner_motd }}"
+    state: present
+
+- name: Configure all VTY lines for SSH
   cisco.ios.ios_config:
+    parents: "{{ item.parent }}"
     lines:
       - transport input ssh
       - login local
-    parents: line vty 0 15
-  when: config_result.changed
+  loop:
+    - { parent: "line vty 0 4" }
+    - { parent: "line vty 5 15" }

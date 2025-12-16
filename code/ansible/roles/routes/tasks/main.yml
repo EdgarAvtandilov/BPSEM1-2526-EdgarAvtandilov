@@ -1,0 +1,6 @@
+---
+- name: Configure static routes if defined
+  when: static_routes is defined
+  cisco.ios.ios_static_routes:
+    config: "{{ static_routes }}"
+    state: merged

@@ -5,13 +5,5 @@
       processes:
         - process_id: "{{ ospf_process }}"
           router_id: "{{ router_id | default(omit) }}"
-          network:
-            - address: "{{ item.network }}"
-              wildcard_bits: "{{ item.wildcard }}"
-              area: "{{ item.area }}"
+          network: "{{ ospf_networks }}"
     state: merged
-  loop: "{{ ospf_networks }}"
-
-- name: Save configuration
-  cisco.ios.ios_config:
-    save_when: modified

@@ -116,6 +116,23 @@
 
 \listoflistings
 
+% \begin{lstlisting}[caption={Cisco commando\'s voor basisopzet SSH}, label={lst:basis-ssh}]
+%     configure terminal
+%     hostname toestel
+%     ip domain-name dns.local
+%     no crypto key generate rsa
+%     crypto key zeroize rsa
+%     yes
+%     ip ssh version 2
+%     crypto key generate rsa modulus 2048
+%     username ansible privilege 15 secret Ansible123
+%     line vty 0 4
+%     login local
+%     transport input ssh
+%     end
+%     write memory
+% \end{lstlisting}
+
 % Als je een lijst van afkortingen of termen wil toevoegen, dan hoort die
 % hier thuis. Gebruik bijvoorbeeld de ``glossaries'' package.
 % https://www.overleaf.com/learn/latex/Glossaries
@@ -153,10 +170,19 @@
 Het onderwerp van deze bachelorproef is gebaseerd op een onderzoeksvoorstel dat vooraf werd beoordeeld door de promotor. Dat voorstel is opgenomen in deze bijlage.
 
 %% TODO: 
-%\section*{Samenvatting}
+\section*{Samenvatting}
 
 % Kopieer en plak hier de samenvatting (abstract) van je onderzoeksvoorstel.
-
+  In de bedrijfswereld staat connectiviteit en beschikbaarheid vandaag de dag centraal, manuele configuratie van netwerktoestellen is nog steeds een courante praktijk en vormt een grote uitdaging voor kmo's. 
+  De manuele configuratie van netwerktoestellen is niet alleen een tijdrovend proces, maar ook foutgevoelig aangezien elk commando een nieuwe kans biedt op een menselijke fout. 
+  Dit onderzoek richt zich op netwerkconfiguraties automatiseren met Ansible, een open-source automatisatietool die in dit onderzoek als single source of truth (SSoT) wordt gebruikt om configuraties centraal, consistent en reproduceerbaar te maken.
+  Door middel van een proof-of-concept in een virtuele kmo-netwerkomgeving wordt onderzocht hoe Ansible kan helpen met snellere, consistentere, schaalbare en foutloze netwerkconfiguratie. 
+  Het onderzoek verloopt in vier fasen: voorbereiding, ontwerp, implementatie en evaluatie. 
+  Tijdens de implementatie worden virtuele Cisco-netwerktoestellen, IOSv op GNS3, geconfigureerd aan de hand van Ansible.
+  Vervolgens worden de resultaten geëvalueerd en wordt er gekeken hoe de vraag \textit{in welke mate kan Ansible bijdragen tot een snellere, reproduceerbare en consistentere, schaalbare en foutloze netwerkconfiguratie binnen kmo's?} kan worden beantwoord.
+  De verwachte resultaten tonen aan dat deze manier van automatiseren de configuratietijd met 60-80\% vermindert, de consistentie verhoogt en het aantal menselijke fouten zo goed als elimineert.
+  Bovendien blijft de uitvoeringstijd grotendeels constant, ook bij een groeiend aantal toestellen, wat de schaalbaarheid van de oplossing aantoont.
+  Tot slot, Ansible biedt een laagdrempelige, kostenefficiënte en betrouwbare manier voor kmo's die hun netwerkbeheer willen optimaliseren aan de hand van automatisatie, zonder nood aan complexe infrastructuuraanpassingen, lange uren voor hun netwerkbeheerders of dure, gespecialiseerde software.
 % Verwijzing naar het bestand met de inhoud van het onderzoeksvoorstel
 \input{../voorstel/voorstel-inhoud}
 

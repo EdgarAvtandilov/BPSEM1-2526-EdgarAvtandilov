@@ -1,17 +1,39 @@
+vlans:
+  - id: 10
+    name: Verdieping1_Gent
+  - id: 20
+    name: Verdieping2_Gent
+  - id: 30
+    name: Verdieping3_Gent
+  - id: 99
+    name: Management
+
 interfaces:
   - name: GigabitEthernet0/0
     description: Verdieping 1 Gent
-    ipv4:
-      - address: 192.168.10.10/24
+    mode: access
+    access_vlan: 10
   - name: GigabitEthernet0/1
     description: Verdieping 2 Gent
-    ipv4:
-      - address: 192.168.10.20/24
+    mode: access
+    access_vlan: 20
   - name: GigabitEthernet0/2
     description: Verdieping 3 Gent
-    ipv4:
-      - address: 192.168.10.30/24
+    mode: access
+    access_vlan: 30
   - name: GigabitEthernet0/3
-    description: Link naar Router
-    ipv4:
-      - address: 192.168.10.5/24
+    description: Link naar Router (Management VLAN)
+    mode: access
+    access_vlan: 99
+
+svi_interfaces:
+  - vlan: 99
+    ipv4: 192.168.10.5/26
+
+static_routes:
+  - address_families:
+      - afi: ipv4
+        routes:
+          - dest: 0.0.0.0/0
+            next_hops:
+              - forward_router_address: 192.168.10.1

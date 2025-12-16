@@ -1,39 +1,34 @@
 ---
 - name: Configureer companyrouter
   hosts: CompanyRouter
-  gather_facts: no
+  gather_facts: yes
   roles:
     - base
     - { role: interfaces, when: interfaces is defined }
+    - { role: routes, when: static_routes is defined }
     - { role: ospf, when: "'routers' in group_names" }
     - { role: nat, when: role_nat | default(false) }
-    - { role: vlans, when: "'switches' in group_names" }
-    - { role: switchports, when: "'switches' in group_names" }
 
 - name: Configureer site routers
-  serial: 5
+  serial: 3
   hosts: GentRouter, AntwerpenRouter, BrusselRouter
-  gather_facts: no
+  gather_facts: yes
   strategy: free
   roles:
     - base
     - { role: interfaces, when: interfaces is defined }
+    - { role: routes, when: static_routes is defined }
     - { role: ospf, when: "'routers' in group_names" }
     - { role: nat, when: role_nat | default(false) }
-    - { role: vlans, when: "'switches' in group_names" }
-    - { role: switchports, when: "'switches' in group_names" }
 
 - name: Configureer switches
-  serial: 20
+  serial: 12
   hosts: switches
-  gather_facts: no
+  gather_facts: yes
   strategy: free
   roles:
     - base
-    - { role: interfaces, when: interfaces is defined }
-    - { role: ospf, when: "'routers' in group_names" }
-    - { role: nat, when: role_nat | default(false) }
-    - { role: vlans, when: "'switches' in group_names" }
+    - { role: routes, when: static_routes is defined }
     - { role: switchports, when: "'switches' in group_names" }
 
   post_tasks:

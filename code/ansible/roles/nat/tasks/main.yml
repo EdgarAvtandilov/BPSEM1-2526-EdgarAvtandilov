@@ -27,8 +27,3 @@
       - ip nat inside source list NAT_ANT interface GigabitEthernet0/1 overload
       - ip nat inside source list NAT_BRU interface GigabitEthernet0/2 overload
   when: role_nat | default(false)
-
-- name: Save configuration
-  cisco.ios.ios_config:
-    save_when: modified
-  when: role_nat | default(false)

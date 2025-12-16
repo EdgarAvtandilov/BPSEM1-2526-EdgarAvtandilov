@@ -27,28 +27,98 @@
 %% en geef het een gepaste titel.
 
 \section{Voorbereidingsfase}
-In deze fase wordt onderzocht hoe een gemiddelde netwerktopologie van een kmo eruit ziet om een representatieve testomgeving op te zetten.
+In de voorbereidingsfase wordt onderzocht hoe een gemiddelde netwerktopologie van een kmo eruit ziet om een realistische en representatieve testomgeving op te zetten voor de proof-of-concept.
+Hierbij wordt geen exact kopie gemaakt van de netwerktopologie van een specifieke kmo, maar wordt er gefocust op het opstellen van een generiek model dat de meest voorkomende kenmerken van kmo-netwerken weergeeft.
 Specifiek wordt er gekeken naar hoeveel toestellen, welk type toestellen en welke configuratie de toestellen moeten hebben.
 Om het type toestellen te bepalen wordt er voornamelijk gekeken naar bestaande literatuur om te zien welk type toestellen het grootste marktaandeel hebben, dit vergroot de representativiteit van de testomgeving en de toepasbaarheid van de resultaten. 
 Daarbij wordt ook rekening gehouden met configuratieprofielen en beheeropties, zodat de gekozen apparaten zoveel mogelijk aansluiten bij de praktijk van kmo's.
 Deze fase toont dat Cisco, voor zowel switches als routers, het grootste marktaandeel heeft. Daarom werd er gekozen om voor de proof-of-concept Cisco toestellen te gebruiken in de testomgeving.
 
-
 \section{Ontwerpfase}
-In de ontwerpfase worden de testomgeving en Ansible controller effectief opgezet, hiervoor wordt een virtueel netwerk opgezet in GNS3.
-Er werd gekozen een bedrijfsomgeving te simuleren met meerdere sites, dit werd gedaan aangezien een kleine topologie geen goed beeld zou geven op de schaalbaarheid en tijdsbesparende kwaliteiten van automatisatie met Ansible.
-Meerdere sites geven ook de mogelijkheid representatieve configuratie, zoals routing, Open Shortest Path First (OSPF) en Access Control Lists (ACL) te implementeren. 
-In deze fase worden ook het Ansible playbook en inventarisbestanden aangemaakt.
-In de inventarisbestanden worden alle routers en switches, in dit geval 4 routers en 12 switches, gedefinieerd. 
+In de ontwerpfase worden de testomgeving en Ansible controller effectief opgezet met de nodige inventarisbestanden en playbooks, hiervoor wordt een virtueel netwerk opgezet in GNS3.
+Het doel van deze fase is het definiëren van een duidelijke en reproduceerbare netwerktopologie die representatief is voor een typische kmo-omgeving en die voldoende complexiteit bevat om de voordelen van netwerkautomatisatie te kunnen aantonen.
+Er werd gekozen een bedrijfsomgeving te simuleren met meerdere sites, dit werd gedaan omdat een kleine topologie geen goed beeld zou geven op de schaalbaarheid en tijdsbesparende kwaliteiten van automatisatie met Ansible.
 
+
+Bij het ontwerp van de netwerktopologie wordt rekening gehouden met gangbare architecturale principes binnen bedrijfsnetwerken.
+Zo wordt een duidelijke scheiding voorzien tussen verschillende netwerksegmenten, onder meer via VLAN-segmentatie, om zowel beheersbaarheid als veiligheid te verhogen.
+Meerdere sites geven ook de mogelijkheid representatieve configuratie, zoals routing, Open Shortest Path First (OSPF) en Access Control Lists (ACL) te implementeren, dit zijn elementen die op een uitgebreider netwerk goed aangetoond kunnen worden. 
+Daarnaast wordt het netwerk zo opgebouwd dat uitbreidingen eenvoudig mogelijk blijven, wat aansluit bij de schaalbaarheidsvereisten van kmo's.
+
+In het inventarisbestand worden alle routers en switches, in dit geval 4 routers en 12 switches, gedefinieerd. 
+De ontworpen topologie omvat één centrale router die instaat voor de verbinding met externe netwerken, 3 siterouters en één uplink switch per site en 3 extra switches per site die fungeren als toegangspunt voor eindgebruikers en netwerkdiensten.
+De switches zijn logisch gegroepeerd en ondersteunen meerdere VLAN's, zodat verschillende soorten verkeer van elkaar gescheiden kunnen worden.
+Deze structuur laat toe om zowel basisconfiguraties als meer geavanceerde configuratiewijzigingen te automatiseren met behulp van Ansible.
+
+Figuur~\ref{fig:topologie} geeft een visuele weergave van de ontworpen netwerktopologie die in de testomgeving werd gebruikt.
+Dit schema vormt de referentie voor alle verdere configuratiestappen en automatisaties die in het kader van deze bachelorproef worden uitgevoerd.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figuren/topologie.png}
+  \caption{Netwerktopologie voor de testomgeving}
+  \label{fig:topologie}
+\end{figure}
 
 \section{Implementatiefase}
-In deze fase wordt het playbook getest. Eerst krijgen de netwerktoestellen een basisconfiguratie bestaande uit de nodige parameters voor een SSH-verbinding, 
-alleen de nodige interfaces voor een SSH-verbinding en waar nodig routers naar de Ansible controller;
+In deze fase worden de playbooks uitgevoerd en getest. 
+Omdat Ansible verbinding met de nodes maakt via SSH moet dit eerst opgezet worden op alle te beheren toestellen. De eerste SSH setup gebruikt placeholders voor enkele variabelen, zoals bijvoorbeeld de hostname en domeinnaam, om tijd te besparen zodat de netwerkbeheerder dezelfde commando's op elk toestel kan uitvoeren zonder tijd verliezen door de juiste variabelen mee te geven. 
+Deze eerste basis SSH setup kan op deze manier gedaan worden omdat deze tijdelijke SSH configuratie bij de automatisatie herschreven wordt met de gewenste variabelen.
+Verder moeten de nodige interfaces voor een SSH-verbinding (dit is de interface die logisch, niet fysiek het dichts bij de Ansible controller ligt) en waar nodig routes naar de Ansible controller;
 Deze stap kan niet overgeslaan worden, een SSH-verbinding zal in zowel een virtuele als fysieke omgeving opgezet moeten worden om de ansible controller te kunnen laten communiceren met de netwerktoestellen.
-Zodra de nodige configuratie voor SSH-communicatie gebeurd is, worden de Ansible playbooks, die in de ontwerpfase geschreven zijn, uitgevoerd en getest. 
 
+\vspace{1em}
+\subsection{basisconfiguratie om Ansible te laten communiceren met nodes}
+Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgevoerd worden op de routers en switches:
+    \subsubsection{Opzetten SSH-verbinding}
+    \begin{verbatim}
+    configure terminal
+    hostname toestel
+    ip domain-name dns.local
+    no crypto key generate rsa
+    crypto key zeroize rsa
+    yes
+    ip ssh version 2
+    crypto key generate rsa modulus 2048
+    username <gekozen username> privilege 15 secret <gekozen wachtwoord>
+    line vty 0 4
+    login local
+    transport input ssh
+    end
+    write memory
+    \end{verbatim}
 
+    \subsubsection{Interface voor SSH-verbinding voorbereiden}
+    \subsubsection{Routers}
+    \begin{verbatim}
+    configure terminal
+    interface <interface die het dichtste bij de ansible controller staat> 
+    ip address <ip adres> <subnet mask>
+    no shutdown
+    \end{verbatim}
+    \subsubsection{Switches}
+    \begin{verbatim}
+    enable
+    configure terminal
+    interface vlan99
+    ip address <
+    ip adres> <subnet mask>
+    no shutdown
+    interface <interface verbonden met siterouter/uplink switch>
+    switchport access vlan 99
+    no shutdown
+    ip route 0.0.0.0 0.0.0.0 <next hop dichts naar Ansible controller>
+    end
+    \end{verbatim} 
+
+    \subsubsection{Routes naar Ansible controller}
+    \begin{verbatim}
+        ip route 0.0.0.0 0.0.0.0 <next hop richting Ansible controller>
+    \end{verbatim}
+
+Zodra de netwerktoestellen zijn voorzien van een IP-adres waarop ze bereikt kunnen worden en SSH opgezet is kan de netwerkbeheerder het playbook uitvoeren.
+
+    
 \section{Evaluatiefase}
 Tijdens de evaluatiefase wordt gekeken of de werkelijke resultaten overeenkomen met de verwachtingen:
 \begin{itemize}
@@ -57,3 +127,14 @@ Tijdens de evaluatiefase wordt gekeken of de werkelijke resultaten overeenkomen 
     \item Is playbooks uitvoeren op één site even makkelijk en snel als de playbooks op meerdere sites uitvoeren?
     \item Worden \textbf{minder fouten}, die connectiviteit zouden verbreken, gemaakt bij configuratie met behulp van Ansible?
 \end{itemize}
+
+\subsubsection{Snelheid}
+\subsubsection{Reproducuceerbaarheid en consistentie}
+Dit onderzoek toont aan dat Ansible weldegelijk zorgt voor betere reproduceerbaarheid en consistentie.
+Het gebruik van modules, die bij ontwerp idempotent zijn, zorgt ervoor dat de playbook meermaals herhaald kunnen worden op de netwerktoestellen.
+Bij het herhalen van de playbooks kijken de modules naar de, op Cisco genoemde, running configuration en wordt alleen afwijkende configuratie aangepast.
+Bestaande configuratie die al overeenkomt met de gewenste configuratie wordt als 'ok' gemarkeerd door Ansible en daarna start de volgende stap van het playbook.
+Enkel afwijkende configuratie wordt dus aangepast en wordt als 'changed' gemarkeerd.
+Hierdoor kan een netwerkbeheerder zien en volgen welke configuratie daadwerkelijk werd aangepast werd en daarmee ook bevestigen of gewenste aanpassingen effectief zijn uitgevoerd.
+\subsubsection{Schaalbaarheid}
+\subsubsection{Foutvermindering}

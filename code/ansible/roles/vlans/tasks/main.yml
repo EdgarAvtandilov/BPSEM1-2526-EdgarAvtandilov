@@ -1,4 +1,0 @@
-- name: VLANs aanmaken
-  cisco.ios.ios_vlans:
-    config: "{{ vlans | map('combine', {'state':'active'}) | list }}"
-    state: merged

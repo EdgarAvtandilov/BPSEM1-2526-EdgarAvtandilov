@@ -18,8 +18,24 @@ interface g0/0
 ip address 10.10.x0.2 255.255.255.252
 no shutdown
 exit
-ip route 192.168.72.0 255.255.255.0 10.10.x.1
+ip route 0.0.0.0 0.0.0.0 10.10.x.1
 exit
 
-op host:
+# op host:
 sudo route add -net 10.10.0.0/16 192.168.72.10
+sudo route add -net 192.168.10.0/24 192.168.72.10
+sudo route add -net 192.168.20.0/24 192.168.72.10
+sudo route add -net 192.168.30.0/24 192.168.72.10
+
+
+# op switches 
+enable
+conf t
+interface vlan99
+ip address 192.168.30.5 255.255.255.192
+no shutdown
+interface g0/3
+switchport access vlan 99
+no shutdown
+ip route 0.0.0.0 0.0.0.0 192.168.30.1
+end
