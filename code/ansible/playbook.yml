@@ -1,7 +1,7 @@
 ---
 - name: Configureer companyrouter
   hosts: CompanyRouter
-  gather_facts: yes
+  gather_facts: no
   roles:
     - base
     - { role: interfaces, when: interfaces is defined }
@@ -12,7 +12,7 @@
 - name: Configureer site routers
   serial: 3
   hosts: GentRouter, AntwerpenRouter, BrusselRouter
-  gather_facts: yes
+  gather_facts: no
   strategy: free
   roles:
     - base
@@ -24,15 +24,18 @@
 - name: Configureer switches
   serial: 12
   hosts: switches
-  gather_facts: yes
+  gather_facts: no
   strategy: free
   roles:
     - base
     - { role: routes, when: static_routes is defined }
     - { role: switchports, when: "'switches' in group_names" }
+    - mgmt
 
-  post_tasks:
-    - name: Save configuration once at the end
-      cisco.ios.ios_config:
-        save_when: always
-      changed_when: false
+
+- name: Finalize (save/verify)
+  hosts: all
+  tasks:
+    - name: Save running-config
+      cisco.ios.ios_command:
+        commands: write memory

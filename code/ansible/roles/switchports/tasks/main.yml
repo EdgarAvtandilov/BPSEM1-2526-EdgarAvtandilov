@@ -24,20 +24,6 @@
   when:
     - item.mode is defined
 
-- name: Configure trunk interfaces
-  cisco.ios.ios_l2_interfaces:
-    config:
-      - name: "{{ item.name }}"
-        mode: trunk
-        trunk:
-          allowed_vlans: "{{ item.trunk_allowed_vlans }}"
-    state: merged
-  loop: "{{ interfaces | default([]) }}"
-  loop_control:
-    label: "{{ item.name }}"
-  when:
-    - item.mode is defined
-    - item.mode == 'trunk'
 
 - name: Configure access interfaces
   cisco.ios.ios_l2_interfaces:
@@ -53,3 +39,28 @@
   when:
     - item.mode is defined
     - item.mode == 'access'
+
+- name: Set trunk encapsulation dot1q (if required)
+  cisco.ios.ios_config:
+    parents: "interface {{ item.name }}"
+    lines:
+      - switchport trunk encapsulation dot1q
+  loop: "{{ interfaces | default([]) }}"
+  when:
+    - item.mode is defined
+    - item.mode == 'trunk'
+    
+- name: Configure trunk interfaces
+  cisco.ios.ios_l2_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        mode: trunk
+        trunk:
+          allowed_vlans: "{{ item.trunk_allowed_vlans }}"
+    state: merged
+  loop: "{{ interfaces | default([]) }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.mode is defined
+    - item.mode == 'trunk'

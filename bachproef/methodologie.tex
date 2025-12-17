@@ -68,10 +68,13 @@ Verder moeten de nodige interfaces voor een SSH-verbinding (dit is de interface 
 Deze stap kan niet overgeslaan worden, een SSH-verbinding zal in zowel een virtuele als fysieke omgeving opgezet moeten worden om de ansible controller te kunnen laten communiceren met de netwerktoestellen.
 
 \vspace{1em}
-\subsection{basisconfiguratie om Ansible te laten communiceren met nodes}
+\subsection{Basisconfiguratie om Ansible te laten communiceren met nodes}
 Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgevoerd worden op de routers en switches:
     \subsubsection{Opzetten SSH-verbinding}
-    \begin{verbatim}
+    \begin{listing}[H]
+    \caption{Basisconfiguratie voor SSH-communicatie op Cisco IOS}
+    \label{lst:ssh-basisconfig}
+    \begin{minted}{text}
     configure terminal
     hostname toestel
     ip domain-name dns.local
@@ -86,11 +89,15 @@ Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgev
     transport input ssh
     end
     write memory
-    \end{verbatim}
+    \end{minted}
+    \end{listing}
 
     \subsubsection{Interface voor SSH-verbinding voorbereiden}
     \subsubsection{Routers}
-    \begin{verbatim}
+    \begin{listing}[H]
+    \caption{Basis interfaceconfiguratie op Cisco IOS routers}
+    \label{lst:router-interface-basisconfig}
+    \begin{minted}{text}    
     configure terminal
     interface <interface die het dichtste bij de ansible controller staat> 
     ip address <ip adres> <subnet mask>
@@ -101,22 +108,126 @@ Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgev
     enable
     configure terminal
     interface vlan99
-    ip address <
-    ip adres> <subnet mask>
+    ip address <ip adres> <subnet mask>
     no shutdown
     interface <interface verbonden met siterouter/uplink switch>
     switchport access vlan 99
     no shutdown
     ip route 0.0.0.0 0.0.0.0 <next hop dichts naar Ansible controller>
     end
-    \end{verbatim} 
+    \end{minted}
+    \end{listing}
 
     \subsubsection{Routes naar Ansible controller}
-    \begin{verbatim}
+    \begin{listing}[H]
+    \caption{Routes naar Ansible controller}
+    \label{lst:route-ansiblecontroller}
+    \begin{minted}{text}   
         ip route 0.0.0.0 0.0.0.0 <next hop richting Ansible controller>
-    \end{verbatim}
+    \end{minted}
+    \end{listing}
 
-Zodra de netwerktoestellen zijn voorzien van een IP-adres waarop ze bereikt kunnen worden en SSH opgezet is kan de netwerkbeheerder het playbook uitvoeren.
+    \subsubsection{Routes van Ansible controller naar node netwerken}
+    Deze stap moet per netwerk dat de netwerkbeheerder wil bereiken uitgevoerd worden.
+    \begin{listing}[H]
+    \caption{Routes naar te beheren netwerken}
+    \label{lst:route-networks}
+    \begin{minted}{text}   
+        sudo route add -net <formaat netwerk/subnetmask in decimalen> <ip adres van de rechtstreeks met de Ansible controller verbonden interface>
+    \end{minted}
+    \end{listing}
+Zodra er routes van de Ansible controller naar de nodes zijn en de netwerktoestellen zijn voorzien van een IP-adres waarop ze bereikt kunnen worden en SSH opgezet is kan de netwerkbeheerder het playbook uitvoeren.
+
+\subsection{Playbooks}
+\subsubsection{Structuur van de Ansible-omgeving}
+Voor de implementatie van de netwerkautomatisatie werd een gestructureerde Ansible-omgeving opgezet. De nadruk ligt hierbij op modulariteit, herbruikbaarheid en onderhoudbaarheid.
+De gebruikte mappenstructuur volgt Ansible best practices, hier wordt een onderscheid gemaakt tussen bestanden voor inventarisatie, variabelebeheer en configuratielogica.
+Zo is er een inventarisbestand waarin alle netwerktoestellen gedefinieerd worden, een unieke map voor zowel groepsvariabelen als toestelvariabelen en tot slot een rollen map waarin specifieke configuratietaken staan, deze 'roles' vormen samen het uit te voeren playbook.
+De structuur van de Ansible-omgeving staat hieronder weergegeven.
+
+\vspace{3em}
+
+\begin{verbatim}
+ansible/
+├── group_vars/
+│   ├── all.yml
+│   ├── edge_switches.yml
+│   ├── routers.yml
+│   └── switches.yml
+├── host_vars/
+│   ├── AntwerpenRouter.yml
+│   ├── AntwerpenUplink.yml
+│   ├── BrusselRouter.yml
+│   ├── BrusselUplink.yml
+│   ├── CompanyRouter.yml
+│   ├── GentRouter.yml
+│   └── GentUplink.yml
+├── roles/
+│   ├── base/
+│   │   └── tasks/
+│   │       └── main.yml
+│   ├── interfaces/
+│   │   └── tasks/
+│   │       └── main.yml
+│   ├── nat/
+│   │   └── tasks/
+│   │       └── main.yml
+│   ├── ospf/
+│   │   ├── defaults/
+│   │   │   └── main.yml
+│   │   └── tasks/
+│   │       └── main.yml
+│   ├── routes/
+│   │   └── tasks/
+│   │       └── main.yml
+│   └── switchports/
+│       └── tasks/
+│           └── main.yml
+├── ansible.cfg
+├── hosts.yml
+├── playbook.yml
+└── requirements.yml
+\end{verbatim}
+
+\subsubsection{Inventarisatie}
+De inventory wordt beheerd via een YAML-bestand (hosts.yml) waarin de netwerktoestellen logisch gegroepeerd zijn.
+Alle netwerkwertoestellen staan onder de geneste groep 'all' met subgroep 'routers' en de geneste groep 'switches'.
+De subgroep 'switches' bestaat uit de subgroepen 'uplink\_switches' en 'edge\_switches'.
+
+Het inventarisbestand heeft de volgende structuur en kan in zijn volledigheid online geraadpleegd worden via GitHub
+
+(\url{https://github.com/EdgarAvtandilov/BPSEM1-2526-EdgarAvtandilov/blob/main/code/ansible/hosts.yml}).
+\subsubsection{Routes naar Ansible controller}
+\begin{listing}[H]
+\caption{Structuur inventarisatie}
+\label{lst:inventarisatie-structuur}
+\begin{minted}{text} 
+all:
+  children:
+    routers:
+      hosts:
+        <router namen>
+    switches:
+      children:
+        uplink_switches:
+          hosts:
+            <uplink switch namen>
+        edge_switches:
+          hosts:
+            <edge switch namen>
+\end{minted}
+\end{listing}
+
+\subsubsection{Variabelenbeheer}
+Er wordt gebruik gemaakt van group\_vars en host\_vars om configuratieparameters respectievelijk op groeps- en toestelniveau te definiëren.
+Dit laat toe om gemeenschappelijke instellingen te centraliseren, terwijl toestelspecifieke afwijkingen behouden blijven.
+
+\subsubsection{Configuratielogica}
+De configuratielogica is opgesplitst in afzonderlijke Ansible roles, waarbij elke role instaat voor een afgebakend onderdeel van de netwerkconfiguratie, zoals basisconfiguratie, interface-instellingen, routing, NAT en OSPF.
+Deze modulaire aanpak verhoogt de leesbaarheid van de configuraties en maakt hergebruik en uitbreiding eenvoudig mogelijk.
+
+Tot slot wordt een centraal playbook gebruikt om de verschillende roles in de juiste volgorde toe te passen op de gedefinieerde netwerktoestellen.
+Deze aanpak sluit aan bij het Infrastructure as Code-principe en zorgt voor een reproduceerbare en consistente configuratie van de volledige testomgeving.
 
     
 \section{Evaluatiefase}
@@ -128,13 +239,69 @@ Tijdens de evaluatiefase wordt gekeken of de werkelijke resultaten overeenkomen 
     \item Worden \textbf{minder fouten}, die connectiviteit zouden verbreken, gemaakt bij configuratie met behulp van Ansible?
 \end{itemize}
 
-\subsubsection{Snelheid}
-\subsubsection{Reproducuceerbaarheid en consistentie}
-Dit onderzoek toont aan dat Ansible weldegelijk zorgt voor betere reproduceerbaarheid en consistentie.
-Het gebruik van modules, die bij ontwerp idempotent zijn, zorgt ervoor dat de playbook meermaals herhaald kunnen worden op de netwerktoestellen.
+\subsection{Snelheid}
+Netwerkconfiguratie met behulp van Ansible zorgt voor een snellere totaalconfiguratie van netwerktoestellen.
+Om de tijdsbesparing te meten kregen 5 willekeurige switches en 5 willekeurige routers dezelfde handmatige en geautomatiseerde configuratie. De tijd per configuratie wordt gemeten en er werd een gemiddelde tijd berekend.
+De tijd werd gemeten door de timer te starten nadat de toestellen volledig geboot waren en voor het eerste commando werd uitgevoerd en gestopt na het laatste commando werd uitgevoerd. Wachttijden werden meegetimed, maar het schrijven van de running configuration naar de startup configuration werd niet meegerekend.
+De gemeten tijden voor één enkel toestel zien eruit als volgt:
+\begin{itemize}
+    \item handmatige routerconfiguratie: 10 minuten 48 seconden
+    \item handmatige switchconfiguratie: 13 minuten en 42 seconden
+    \item geautomatiseerde routerconfiguratie: 8 minuten 
+    \item geautomatiseerde switchconfiguratie: 9 minuten en 16 seconden
+\end{itemize}
+
+\subsubsection{Routers}
+Zoals de bovenvermelde cijfers tonen duurt één router handmatig configureren gemiddeld 10 minuten en 48 seconden, één router aan de hand van Ansible configureren daarentegen kostte gemiddeld 8 minuten.
+Hoewel dit voor de configuratie van één toestel maar een tijdsbesparing is van 25,92\%, maken de tijdsbesparende kwaliteiten van automatische configuratie zich kenbaar in het configureren van meerdere toestellen.
+Met een gemiddelde handmatige configuratieduur van 14 minuten en 13 seconden, zou alle routers in de opstelling configureren gemiddeld 43 minuten en 10 seconden in beslag nemen. 
+Doordat Ansible toestellen parallel configureert, en niet één voor één zoals een netwerkbeheerder handmatig zou moeten doen, zie je de tijd die nodig is om de routers in de testopstelling te configureren drastisch verminderen. 
+Zo duurt de geautomatiseerde configuratie van alle routers in de testopstelling het 12 minuten en 51 seconden, een 70,23\% tijdsbesparing vergeleken met handmatige configuratie.
+\subsubsection{Switches}
+Voor de switches werden alleen de uplink switches getimed, aangezien zij wel een uitgebreide configuratie hebben en dus meer representatief zijn.
+Ook bij de switches bespaart configuratie met behulp van Ansible tijd. Zo duurt één switch configureren gemiddeld 32,36\% minder lang. Een kleine, maar toch voelbare tijdbesparing.
+Echter is de grootste tijdbesparing, net zoals bij routers, merkbaar bij het configureren van meerdere switches. 
+De drie uplink switches handmatig configureren zou gemiddeld 41 minuten en 6 seconden in beslag nemen. 
+Ansible maakt de configuratie af in 16 minuten en 52 seconden, een tijdsbesparing van 58,96\%.
+
+\subsection{Reproduceerbaarheid en consistentie}
+Dit onderzoek toont aan dat Ansible zorgt voor betere reproduceerbaarheid en consistentie.
+Het gebruik van modules, die bij ontwerp idempotent zijn, zorgt ervoor dat de playbooks meermaals herhaald kunnen worden op de netwerktoestellen.
 Bij het herhalen van de playbooks kijken de modules naar de, op Cisco genoemde, running configuration en wordt alleen afwijkende configuratie aangepast.
 Bestaande configuratie die al overeenkomt met de gewenste configuratie wordt als 'ok' gemarkeerd door Ansible en daarna start de volgende stap van het playbook.
 Enkel afwijkende configuratie wordt dus aangepast en wordt als 'changed' gemarkeerd.
-Hierdoor kan een netwerkbeheerder zien en volgen welke configuratie daadwerkelijk werd aangepast werd en daarmee ook bevestigen of gewenste aanpassingen effectief zijn uitgevoerd.
-\subsubsection{Schaalbaarheid}
-\subsubsection{Foutvermindering}
+Hierdoor kan een netwerkbeheerder zien en volgen welke configuratie daadwerkelijk aangepast werd en daarmee ook bevestigen of gewenste aanpassingen effectief zijn uitgevoerd.
+
+\subsection{Schaalbaarheid}
+Naast tijdsbesparing en consistentie speelt ook schaalbaarheid een belangrijke rol bij netwerkbeheer binnen een kmo-context.
+Bij handmatige configuratie neemt de benodigde configuratietijd lineair toe naarmate het aantal netwerktoestellen stijgt, aangezien elk toestel afzonderlijk moet worden geconfigureerd.
+Dit vormt een belangrijke beperking bij groeiende netwerkomgevingen.
+De evaluatie toont aan dat Ansible een schaalbare aanpak biedt voor netwerkconfiguratie.
+Dankzij het gebruik van inventories en groepsgebaseerde configuraties kunnen configuratiewijzigingen in één keer worden toegepast op meerdere netwerktoestellen.
+Wanneer extra routers of switches aan de inventaris worden toegevoegd, kunnen bestaande playbooks zonder aanpassing opnieuw worden gebruikt.
+Het werk dat nodig is om het netwerk uit te breiden blijft daardoor beperkt, terwijl de configuratie consistent blijft over alle toestellen.
+Daarnaast draagt de modulaire opbouw van de configuratie, via het gebruik van roles, bij aan de schaalbaarheid.
+Nieuwe functionaliteiten of configuratieonderdelen kunnen worden toegevoegd door extra roles te definiëren of bestaande roles uit te breiden, zonder impact op reeds geïmplementeerde configuraties.
+Deze aanpak maakt het mogelijk om het netwerk stapsgewijs uit te breiden en aan te passen aan veranderende eisen, zonder dat de complexiteit toeneemt.
+Hieruit blijkt dat netwerkautomatisatie met Ansible niet alleen geschikt is voor kleine opstellingen, maar ook een schaalbare oplossing vormt voor kmo's met groeiende netwerkinfrastructuur.
+
+\subsection{Foutvermindering}
+Tot slot draagt automatisatie met Ansible naast snelheid, reproduceerbaarheid en schaalbaarheid bij aan het verminderen van configuratiefouten.
+Bij handmatige netwerkconfiguratie worden toestellen één voor één via de command line interface geconfigureerd.
+Dit proces is foutgevoelig, aangezien kleine typfouten, vergeten commando's of inconsistent toegepaste configuraties kunnen leiden tot netwerkstoringen of beveiligingsproblemen.
+De evaluatie toont aan dat Ansible deze risico's aanzienlijk reduceert.
+Configuraties worden vastgelegd in playbooks en roles, waardoor dezelfde configuratie telkens op identieke wijze wordt toegepast, dit elimineert vergeten commando's en inconsistente configuraties.
+Doordat configuraties niet manueel worden ingegeven, wordt het aantal typfouten ook aanzienlijk vermindert.
+\vspace{1em}
+
+Daarnaast zorgt het gebruik van gestructureerde variabelen en gestandaardiseerde modules voor consistente configuraties.
+Een belangrijk mechanisme hierbij is de idempotente werking van Ansible-modules, deze controleren eerst de huidige configuratiestatus van een toestel alvorens wijzigingen toe te passen.
+Hierdoor wordt voorkomen dat bestaande, correct werkende configuraties onbedoeld worden overschreven.
+\vspace{1em}
+
+Tijdens de uitvoering van een playbook wordt ook duidelijk gerapporteerd welke taken effectief wijzigingen hebben doorgevoerd.
+Dit maakt het eenvoudiger om fouten te detecteren, te analyseren en indien nodig snel te corrigeren.
+In tegenstelling tot manuele configuratie is er bovendien steeds een duidelijk overzicht van de gewenste configuratiestatus, wat troubleshooting vereenvoudigt.
+\vspace{1em}
+
+Op basis van deze bevindingen kan worden geconcludeerd dat Ansible niet alleen efficiënter is dan manuele configuratie, maar ook bijdraagt aan het verminderen van menselijke fouten en het verhogen van de stabiliteit van de netwerkinfrastructuur.

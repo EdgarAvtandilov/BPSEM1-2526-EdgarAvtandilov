@@ -307,7 +307,10 @@ Een playbook bestaat uit een of meerdere \emph{plays}, waarbij elke play een ree
 
 Voorbeeld van een eenvoudig playbook, met een \emph{play} die op alle switches de VLANs configureerd en \emph{tasks} die de eindtoestand van elke VLAN beschrijven:
 
-\begin{verbatim}
+\begin{listing}[H]
+\caption{Voorbeeld playbook}
+\label{lst:playbook}
+\begin{minted}{text}
 ---
 - name: Configure VLANs on switches
   hosts: switches
@@ -325,7 +328,9 @@ Voorbeeld van een eenvoudig playbook, met een \emph{play} die op alle switches d
         vlan_id: 20
         name: HR
         state: present
-\end{verbatim}
+\end{minted}
+\end{listing}
+
 
 Playbooks kunnen zowel simpele taken bevat, zoals heirboven getoond, als complexe logica bevatten met conditionals, loops en error handling.
 De YAML-syntax maakt de playbooks leesbaar voor zowel mensen als machines.

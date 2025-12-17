@@ -10,3 +10,10 @@ access_ports:
   - { name: GigabitEthernet0/0, vlan: 10 }
   - { name: GigabitEthernet0/1, vlan: 20 }
   - { name: GigabitEthernet0/2, vlan: 30 }
+
+ansible_terminal_length: 0
+ansible_terminal_width: 0
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: cisco.ios.ios
+ansible_become: true
+ansible_become_method: enable

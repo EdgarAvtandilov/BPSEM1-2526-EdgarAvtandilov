@@ -22,9 +22,9 @@ interfaces:
     mode: access
     access_vlan: 30
   - name: GigabitEthernet0/3
-    description: Link naar Router (Management VLAN)
-    mode: access
-    access_vlan: 99
+    description: Uplink
+    mode: trunk
+    trunk_allowed_vlans: "1,10,20,30,99"
 
 svi_interfaces:
   - vlan: 99

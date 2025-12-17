@@ -14,5 +14,37 @@
 % Heeft het onderzoek geleid tot nieuwe vragen die uitnodigen tot verder 
 %onderzoek?
 
-\lipsum[76-80]
+In deze bachelorproef werd onderzocht in welke mate netwerkautomatisatie met behulp van Ansible kan bijdragen aan snellere, reproduceerbare en consistente, schaalbare en foutloze netwerkconfiguratie binnen een kmo-context.
+Uit de literatuurstudie bleek dat traditionele, manuele netwerkconfiguratie steeds moeilijker schaalbaar is door de toenemende complexiteit van netwerken en het groeiende aantal netwerktoestellen.
+De groeiende complexiteit van netwerken in combinatie met menselijke fouten vormen een belangrijke oorzaak van netwerkstoringen en downtime.
+
+Op basis van deze inzichten werd een proof-of-concept uitgewerkt waarbij netwerkconfiguraties zowel manueel als geautomatiseerd werden uitgevoerd en met elkaar vergeleken.
+De evaluatie toont duidelijk aan dat netwerkautomatisatie met Ansible voordelen biedt ten opzichte van manuele configuratie.
+
+Wat betreft snelheid werd vastgesteld dat geautomatiseerde configuratie per individueel toestel een beperkte, maar merkbare tijdswinst oplevert.
+Deze tijdswinst wordt echter veel groter bij de gelijktijdige configuratie van meerdere toestellen, dankzij de parallelle uitvoering van configuratietaken op meerdere toestellen. 
+Ansible kan meerdere routers en switches gelijktijdig configureren, wat resulteert in een totale tijdsbesparing tot 70\% ten opzichte van manuele configuratie.
+Dit maakt automatisatie bijzonder geschikt voor omgevingen waar regelmatig meerdere toestellen moeten worden aangepast of uitgerold.
+\vspace{1em}
+
+Daarnaast bevestigt dit onderzoek dat Ansible een sterke meerwaarde biedt op het vlak van reproduceerbaarheid en consistentie.
+Dankzij het gebruik van idempotente modules en declaratieve configuraties kan dezelfde configuratie betrouwbaar opnieuw worden toegepast zonder ongewenste neveneffecten.
+Dit vermindert configuratiedrift en zorgt ervoor dat netwerktoestellen consistent blijven, zelfs na herhaalde wijzigingen of heruitvoeringen van playbooks.
+\vspace{1em}
+
+Ook op het vlak van schaalbaarheid biedt Ansible duidelijke voordelen.
+Waar de benodigde inspanning bij manuele configuratie lineair toeneemt met het aantal toestellen, laat Ansible toe om configuraties centraal te beheren en in één keer toe te passen op groepen van toestellen.
+Dankzij inventories, variabelen en roles kan het netwerk eenvoudig worden uitgebreid zonder dat bestaande configuraties herschreven moeten worden.
+Dit maakt de oplossing geschikt voor kmo's die verwachten dat hun netwerkinfrastructuur in de toekomst zal groeien.
+\vspace{1em}
+
+Tot slot toont de evaluatie aan dat netwerkautomatisatie met Ansible leidt tot een duidelijke vermindering in configuratiefouten.
+Door manuele invoer te vervangen door gestructureerde en herbruikbare configuratiebestanden worden typfouten en inconsistenties zo goed als geëlimineerd.
+Daarnaast zorgen duidelijke rapportering en integratie met versiebeheer ervoor dat wijzigingen beter traceerbaar zijn en indien nodig eenvoudig kunnen worden teruggedraaid.
+\vspace{1em}
+
+Op basis van deze resultaten kan worden geconcludeerd dat netwerkautomatisatie met Ansible een haalbare en waardevolle oplossing is voor netwerkbeheer binnen een kmo-context.
+Hoewel er een kleine initiële leercurve en tijdsinverstering nodig is, wegen de voordelen die Ansible met zich mee brengt hier ruimschoots tegen op.
+Ansible vormt daarmee een goede basis voor een meer gestructureerde en toekomstgerichte aanpak van netwerkbeheer.
+
 

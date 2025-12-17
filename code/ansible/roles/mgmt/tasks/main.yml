@@ -1,0 +1,85 @@
+---
+- name: Remove IP from Vlan1 to prepare for migration
+  cisco.ios.ios_config:
+    lines:
+      - no ip address
+    parents: interface Vlan1
+  async: 45
+  poll: 0
+  register: vlan1_removal
+  when: svi_interfaces is defined
+
+- name: Configure Management SVI immediately after Vlan1 removal
+  cisco.ios.ios_config:
+    lines:
+      - description Management SVI
+      - ip address {{ item.ipv4 | regex_replace('/.*', '') }} {{ item.ipv4 | ansible.utils.ipaddr('netmask') }}
+      - no shutdown
+    parents: "interface Vlan{{ item.vlan }}"
+  loop: "{{ svi_interfaces | default([]) }}"
+  loop_control:
+    label: "Vlan{{ item.vlan }}"
+  async: 45
+  poll: 0
+  register: vlan_svi_config
+  when: svi_interfaces is defined
+
+- name: Wait for switch to process IP migration
+  pause:
+    seconds: 10
+
+- name: Verify Management SVI is accessible (reconnect if needed)
+  cisco.ios.ios_command:
+    commands:
+      - show ip interface brief | include Vlan{{ item.vlan }}
+  loop: "{{ svi_interfaces | default([]) }}"
+  loop_control:
+    label: "Vlan{{ item.vlan }}"
+  retries: 3
+  delay: 5
+  register: vlan_verify
+  until: vlan_verify is succeeded
+  when: svi_interfaces is defined
+
+- name: Shutdown old Vlan1 interface
+  cisco.ios.ios_config:
+    lines:
+      - shutdown
+    parents: interface Vlan1
+  ignore_errors: yes
+
+- name: Configure Management SVI (ensure idempotency)
+  cisco.ios.ios_l3_interfaces:
+    config:
+      - name: "Vlan{{ item.vlan }}"
+        ipv4:
+          - address: "{{ item.ipv4 }}"
+    state: merged
+  loop: "{{ svi_interfaces | default([]) }}"
+  loop_control:
+    label: "Vlan{{ item.vlan }}"
+  when: svi_interfaces is defined
+
+- name: Ensure Management SVI is enabled
+  cisco.ios.ios_interfaces:
+    config:
+      - name: "Vlan{{ item.vlan }}"
+        description: "Management SVI"
+        enabled: true
+    state: merged
+  loop: "{{ svi_interfaces | default([]) }}"
+  loop_control:
+    label: "Vlan{{ item.vlan }}"
+  when: svi_interfaces is defined
+
+- name: Configure default gateway (static route)
+  cisco.ios.ios_static_routes:
+    config: "{{ static_routes }}"
+    state: merged
+  when: static_routes is defined
+
+- name: Enable IP routing (if needed for inter-VLAN routing)
+  cisco.ios.ios_config:
+    lines:
+      - ip routing
+  when: enable_ip_routing | default(false) | bool
