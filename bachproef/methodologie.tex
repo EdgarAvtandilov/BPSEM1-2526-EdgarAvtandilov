@@ -28,25 +28,25 @@
 
 \section{Voorbereidingsfase}
 In de voorbereidingsfase wordt onderzocht hoe een gemiddelde netwerktopologie van een kmo eruit ziet om een realistische en representatieve testomgeving op te zetten voor de proof-of-concept.
-Hierbij wordt geen exact kopie gemaakt van de netwerktopologie van een specifieke kmo, maar wordt er gefocust op het opstellen van een generiek model dat de meest voorkomende kenmerken van kmo-netwerken weergeeft.
+Hierbij wordt geen exacte kopie gemaakt van de netwerktopologie van een specifieke kmo, maar wordt er gefocust op het opstellen van een generiek model dat de meest voorkomende kenmerken van kmo-netwerken weergeeft.
 Specifiek wordt er gekeken naar hoeveel toestellen, welk type toestellen en welke configuratie de toestellen moeten hebben.
 Om het type toestellen te bepalen wordt er voornamelijk gekeken naar bestaande literatuur om te zien welk type toestellen het grootste marktaandeel hebben, dit vergroot de representativiteit van de testomgeving en de toepasbaarheid van de resultaten. 
 Daarbij wordt ook rekening gehouden met configuratieprofielen en beheeropties, zodat de gekozen apparaten zoveel mogelijk aansluiten bij de praktijk van kmo's.
 Deze fase toont dat Cisco, voor zowel switches als routers, het grootste marktaandeel heeft. Daarom werd er gekozen om voor de proof-of-concept Cisco toestellen te gebruiken in de testomgeving.
 
 \section{Ontwerpfase}
-In de ontwerpfase worden de testomgeving en Ansible controller effectief opgezet met de nodige inventarisbestanden en playbooks, hiervoor wordt een virtueel netwerk opgezet in GNS3.
+In de ontwerpfase worden de testomgeving en Ansible controller effectief opgezet met de nodige inventarisbestanden en playbooks. Hiervoor wordt een virtueel netwerk opgezet in GNS3.
 Het doel van deze fase is het definiëren van een duidelijke en reproduceerbare netwerktopologie die representatief is voor een typische kmo-omgeving en die voldoende complexiteit bevat om de voordelen van netwerkautomatisatie te kunnen aantonen.
-Er werd gekozen een bedrijfsomgeving te simuleren met meerdere sites, dit werd gedaan omdat een kleine topologie geen goed beeld zou geven op de schaalbaarheid en tijdsbesparende kwaliteiten van automatisatie met Ansible.
+Er werd ervoor gekozen om een bedrijfsomgeving te simuleren met meerdere sites. Deze keuze werd gemaakt omdat een kleine topologie geen goed beeld zou geven van de schaalbaarheid en tijdsbesparende kwaliteiten van automatisatie met Ansible.
 
 
 Bij het ontwerp van de netwerktopologie wordt rekening gehouden met gangbare architecturale principes binnen bedrijfsnetwerken.
 Zo wordt een duidelijke scheiding voorzien tussen verschillende netwerksegmenten, onder meer via VLAN-segmentatie, om zowel beheersbaarheid als veiligheid te verhogen.
-Meerdere sites geven ook de mogelijkheid representatieve configuratie, zoals routing, Open Shortest Path First (OSPF) en Access Control Lists (ACL) te implementeren, dit zijn elementen die op een uitgebreider netwerk goed aangetoond kunnen worden. 
+Meerdere sites geven ook de mogelijkheid representatieve configuratie, zoals routing, Open Shortest Path First (OSPF) en Access Control Lists (ACL) te implementeren. Dit zijn elementen die op een uitgebreider netwerk goed aangetoond kunnen worden. 
 Daarnaast wordt het netwerk zo opgebouwd dat uitbreidingen eenvoudig mogelijk blijven, wat aansluit bij de schaalbaarheidsvereisten van kmo's.
 
 In het inventarisbestand worden alle routers en switches, in dit geval 4 routers en 12 switches, gedefinieerd. 
-De ontworpen topologie omvat één centrale router die instaat voor de verbinding met externe netwerken, 3 siterouters en één uplink switch per site en 3 extra switches per site die fungeren als toegangspunt voor eindgebruikers en netwerkdiensten.
+De ontworpen topologie omvat één centrale router die instaat voor de verbinding met externe netwerken, drie siterouters, één uplink switch per site en drie extra switches per site die fungeren als toegangspunt voor eindgebruikers en netwerkdiensten.
 De switches zijn logisch gegroepeerd en ondersteunen meerdere VLAN's, zodat verschillende soorten verkeer van elkaar gescheiden kunnen worden.
 Deze structuur laat toe om zowel basisconfiguraties als meer geavanceerde configuratiewijzigingen te automatiseren met behulp van Ansible.
 
@@ -62,8 +62,8 @@ Dit schema vormt de referentie voor alle verdere configuratiestappen en automati
 
 \section{Implementatiefase}
 In deze fase worden de playbooks uitgevoerd en getest. 
-Omdat Ansible verbinding met de nodes maakt via SSH moet dit eerst opgezet worden op alle te beheren toestellen. De eerste SSH setup gebruikt placeholders voor enkele variabelen, zoals bijvoorbeeld de hostname en domeinnaam, om tijd te besparen zodat de netwerkbeheerder dezelfde commando's op elk toestel kan uitvoeren zonder tijd verliezen door de juiste variabelen mee te geven. 
-Deze eerste basis SSH setup kan op deze manier gedaan worden omdat deze tijdelijke SSH configuratie bij de automatisatie herschreven wordt met de gewenste variabelen.
+Aangezien Ansible verbinding met de nodes maakt via SSH moet dit eerst opgezet worden op alle te beheren toestellen. De eerste SSH setup gebruikt placeholders voor enkele variabelen, zoals de hostname en domeinnaam, om tijd te besparen zodat de netwerkbeheerder dezelfde commando's op elk toestel kan uitvoeren zonder tijd te verliezen door de juiste variabelen mee te geven. 
+Deze eerste basis SSH setup kan op deze manier gedaan worden, omdat deze tijdelijke SSH configuratie bij de automatisatie herschreven wordt met de gewenste variabelen.
 Verder moeten de nodige interfaces voor een SSH-verbinding (dit is de interface die logisch, niet fysiek het dichts bij de Ansible controller ligt) en waar nodig routes naar de Ansible controller;
 Deze stap kan niet overgeslaan worden, een SSH-verbinding zal in zowel een virtuele als fysieke omgeving opgezet moeten worden om de ansible controller te kunnen laten communiceren met de netwerktoestellen.
 
@@ -136,13 +136,14 @@ Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgev
         sudo route add -net <formaat netwerk/subnetmask in decimalen> <ip adres van de rechtstreeks met de Ansible controller verbonden interface>
     \end{minted}
     \end{listing}
-Zodra er routes van de Ansible controller naar de nodes zijn en de netwerktoestellen zijn voorzien van een IP-adres waarop ze bereikt kunnen worden en SSH opgezet is kan de netwerkbeheerder het playbook uitvoeren.
+Zodra er routes van de Ansible controller naar de nodes zijn, de netwerktoestellen zijn voorzien van een IP-adres waarop ze bereikt kunnen worden en SSH opgezet is, kan de netwerkbeheerder het playbook uitvoeren.
 
 \subsection{Playbooks}
 \subsubsection{Structuur van de Ansible-omgeving}
 Voor de implementatie van de netwerkautomatisatie werd een gestructureerde Ansible-omgeving opgezet. De nadruk ligt hierbij op modulariteit, herbruikbaarheid en onderhoudbaarheid.
-De gebruikte mappenstructuur volgt Ansible best practices, hier wordt een onderscheid gemaakt tussen bestanden voor inventarisatie, variabelebeheer en configuratielogica.
-Zo is er een inventarisbestand waarin alle netwerktoestellen gedefinieerd worden, een unieke map voor zowel groepsvariabelen als toestelvariabelen en tot slot een rollen map waarin specifieke configuratietaken staan, deze 'roles' vormen samen het uit te voeren playbook.
+De gebruikte mappenstructuur volgt Ansible best practices. Hier wordt een onderscheid gemaakt tussen bestanden voor inventarisatie, variabelebeheer en configuratielogica.
+Zo is er een inventarisbestand waarin alle netwerktoestellen gedefinieerd worden, een unieke map voor zowel groepsvariabelen als toestelvariabelen en tot slot een rollen map waarin specifieke configuratietaken staan.
+Deze 'roles' vormen samen het uit te voeren playbook.
 De structuur van de Ansible-omgeving staat hieronder weergegeven.
 
 \vspace{3em}
@@ -242,7 +243,7 @@ Tijdens de evaluatiefase wordt gekeken of de werkelijke resultaten overeenkomen 
 \subsection{Snelheid}
 Netwerkconfiguratie met behulp van Ansible zorgt voor een snellere totaalconfiguratie van netwerktoestellen.
 Om de tijdsbesparing te meten kregen 5 willekeurige switches en 5 willekeurige routers dezelfde handmatige en geautomatiseerde configuratie. De tijd per configuratie wordt gemeten en er werd een gemiddelde tijd berekend.
-De tijd werd gemeten door de timer te starten nadat de toestellen volledig geboot waren en voor het eerste commando werd uitgevoerd en gestopt na het laatste commando werd uitgevoerd. Wachttijden werden meegetimed, maar het schrijven van de running configuration naar de startup configuration werd niet meegerekend.
+De tijd werd gemeten door de timer te starten nadat de toestellen volledig geboot waren en voor het eerste commando werd uitgevoerd. De timer werd gestopt zodra het laatste commando werd uitgevoerd. Wachttijden werden meegetimed, maar het schrijven van de running configuration naar de startup configuration werd niet meegerekend.
 De gemeten tijden voor één enkel toestel zien eruit als volgt:
 \begin{itemize}
     \item handmatige routerconfiguratie: 10 minuten 48 seconden
@@ -252,11 +253,11 @@ De gemeten tijden voor één enkel toestel zien eruit als volgt:
 \end{itemize}
 
 \subsubsection{Routers}
-Zoals de bovenvermelde cijfers tonen duurt één router handmatig configureren gemiddeld 10 minuten en 48 seconden, één router aan de hand van Ansible configureren daarentegen kostte gemiddeld 8 minuten.
+Zoals de bovenvermelde cijfers tonen duurt één router handmatig configureren gemiddeld 10 minuten en 48 seconden. Één router aan de hand van Ansible configureren daarentegen kostte gemiddeld 8 minuten.
 Hoewel dit voor de configuratie van één toestel maar een tijdsbesparing is van 25,92\%, maken de tijdsbesparende kwaliteiten van automatische configuratie zich kenbaar in het configureren van meerdere toestellen.
 Met een gemiddelde handmatige configuratieduur van 14 minuten en 13 seconden, zou alle routers in de opstelling configureren gemiddeld 43 minuten en 10 seconden in beslag nemen. 
 Doordat Ansible toestellen parallel configureert, en niet één voor één zoals een netwerkbeheerder handmatig zou moeten doen, zie je de tijd die nodig is om de routers in de testopstelling te configureren drastisch verminderen. 
-Zo duurt de geautomatiseerde configuratie van alle routers in de testopstelling het 12 minuten en 51 seconden, een 70,23\% tijdsbesparing vergeleken met handmatige configuratie.
+Zo duurt de geautomatiseerde configuratie van alle routers in de testopstelling 12 minuten en 51 seconden, een 70,23\% tijdsbesparing vergeleken met handmatige configuratie.
 \subsubsection{Switches}
 Voor de switches werden alleen de uplink switches getimed, aangezien zij wel een uitgebreide configuratie hebben en dus meer representatief zijn.
 Ook bij de switches bespaart configuratie met behulp van Ansible tijd. Zo duurt één switch configureren gemiddeld 32,36\% minder lang. Een kleine, maar toch voelbare tijdbesparing.
@@ -268,7 +269,7 @@ Ansible maakt de configuratie af in 16 minuten en 52 seconden, een tijdsbesparin
 Dit onderzoek toont aan dat Ansible zorgt voor betere reproduceerbaarheid en consistentie.
 Het gebruik van modules, die bij ontwerp idempotent zijn, zorgt ervoor dat de playbooks meermaals herhaald kunnen worden op de netwerktoestellen.
 Bij het herhalen van de playbooks kijken de modules naar de, op Cisco genoemde, running configuration en wordt alleen afwijkende configuratie aangepast.
-Bestaande configuratie die al overeenkomt met de gewenste configuratie wordt als 'ok' gemarkeerd door Ansible en daarna start de volgende stap van het playbook.
+Bestaande configuratie die al overeenkomt met de gewenste configuratie wordt als 'ok' gemarkeerd door Ansible en waarna de volgende stap van het playbook begint.
 Enkel afwijkende configuratie wordt dus aangepast en wordt als 'changed' gemarkeerd.
 Hierdoor kan een netwerkbeheerder zien en volgen welke configuratie daadwerkelijk aangepast werd en daarmee ook bevestigen of gewenste aanpassingen effectief zijn uitgevoerd.
 
@@ -290,7 +291,7 @@ Tot slot draagt automatisatie met Ansible naast snelheid, reproduceerbaarheid en
 Bij handmatige netwerkconfiguratie worden toestellen één voor één via de command line interface geconfigureerd.
 Dit proces is foutgevoelig, aangezien kleine typfouten, vergeten commando's of inconsistent toegepaste configuraties kunnen leiden tot netwerkstoringen of beveiligingsproblemen.
 De evaluatie toont aan dat Ansible deze risico's aanzienlijk reduceert.
-Configuraties worden vastgelegd in playbooks en roles, waardoor dezelfde configuratie telkens op identieke wijze wordt toegepast, dit elimineert vergeten commando's en inconsistente configuraties.
+Configuraties worden vastgelegd in playbooks en roles, waardoor dezelfde configuratie telkens op identieke wijze wordt toegepast. Dit elimineert vergeten commando's en inconsistente configuraties.
 Doordat configuraties niet manueel worden ingegeven, wordt het aantal typfouten ook aanzienlijk vermindert.
 \vspace{1em}
 
