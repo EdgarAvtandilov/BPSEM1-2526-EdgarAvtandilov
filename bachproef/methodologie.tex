@@ -27,12 +27,12 @@
 %% en geef het een gepaste titel.
 
 \section{Voorbereidingsfase}
-In de voorbereidingsfase wordt onderzocht hoe een gemiddelde netwerktopologie van een kmo eruit ziet om een realistische en representatieve testomgeving op te zetten voor de proof-of-concept.
+In de voorbereidingsfase wordt onderzocht hoe een gemiddelde netwerktopologie van een kmo eruitziet om een realistische en representatieve testomgeving op te zetten voor de proof-of-concept.
 Hierbij wordt geen exacte kopie gemaakt van de netwerktopologie van een specifieke kmo, maar wordt er gefocust op het opstellen van een generiek model dat de meest voorkomende kenmerken van kmo-netwerken weergeeft.
 Specifiek wordt er gekeken naar hoeveel toestellen, welk type toestellen en welke configuratie de toestellen moeten hebben.
 Om het type toestellen te bepalen wordt er voornamelijk gekeken naar bestaande literatuur om te zien welk type toestellen het grootste marktaandeel hebben, dit vergroot de representativiteit van de testomgeving en de toepasbaarheid van de resultaten. 
 Daarbij wordt ook rekening gehouden met configuratieprofielen en beheeropties, zodat de gekozen apparaten zoveel mogelijk aansluiten bij de praktijk van kmo's.
-Deze fase toont dat Cisco, voor zowel switches als routers, het grootste marktaandeel heeft. Daarom werd er gekozen om voor de proof-of-concept Cisco toestellen te gebruiken in de testomgeving.
+Deze fase toont dat Cisco, voor zowel switches als routers, het grootste marktaandeel heeft. Daarom werd er gekozen om voor de proof-of-concept Cisco-toestellen te gebruiken in de testomgeving.
 
 \section{Ontwerpfase}
 In de ontwerpfase worden de testomgeving en Ansible controller effectief opgezet met de nodige inventarisbestanden en playbooks. Hiervoor wordt een virtueel netwerk opgezet in GNS3.
@@ -64,7 +64,7 @@ Dit schema vormt de referentie voor alle verdere configuratiestappen en automati
 In deze fase worden de playbooks uitgevoerd en getest. 
 Aangezien Ansible verbinding met de nodes maakt via SSH moet dit eerst opgezet worden op alle te beheren toestellen. De eerste SSH setup gebruikt placeholders voor enkele variabelen, zoals de hostname en domeinnaam, om tijd te besparen zodat de netwerkbeheerder dezelfde commando's op elk toestel kan uitvoeren zonder tijd te verliezen door de juiste variabelen mee te geven. 
 Deze eerste basis SSH setup kan op deze manier gedaan worden, omdat deze tijdelijke SSH configuratie bij de automatisatie herschreven wordt met de gewenste variabelen.
-Verder moeten de nodige interfaces voor een SSH-verbinding (dit is de interface die logisch, niet fysiek het dichts bij de Ansible controller ligt) en waar nodig routes naar de Ansible controller;
+Verder moeten de nodige interfaces voor een SSH-verbinding (dit is de interface die logisch, niet fysiek het dichts bij de Ansible controller ligt) en waar nodig routes naar de Ansible controller.
 Deze stap kan niet overgeslaan worden, een SSH-verbinding zal in zowel een virtuele als fysieke omgeving opgezet moeten worden om de ansible controller te kunnen laten communiceren met de netwerktoestellen.
 
 \vspace{1em}
@@ -78,9 +78,6 @@ Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgev
     configure terminal
     hostname toestel
     ip domain-name dns.local
-    no crypto key generate rsa
-    crypto key zeroize rsa
-    yes
     ip ssh version 2
     crypto key generate rsa modulus 2048
     username <gekozen username> privilege 15 secret <gekozen wachtwoord>
@@ -102,10 +99,13 @@ Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgev
     interface <interface die het dichtste bij de ansible controller staat> 
     ip address <ip adres> <subnet mask>
     no shutdown
-    \end{verbatim}
+    \end{minted}
+    \end{listing}
     \subsubsection{Switches}
-    \begin{verbatim}
-    enable
+    \begin{listing}[H]
+    \caption{Basis interfaceconfiguratie op Cisco IOS switches}
+    \label{lst:switch-interface-basisconfig}
+    \begin{minted}{text}    
     configure terminal
     interface vlan99
     ip address <ip adres> <subnet mask>
@@ -128,7 +128,7 @@ Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgev
     \end{listing}
 
     \subsubsection{Routes van Ansible controller naar node netwerken}
-    Deze stap moet per netwerk dat de netwerkbeheerder wil bereiken uitgevoerd worden.
+    Deze stap moet voor elk netwerk dat de netwerkbeheerder wil bereiken uitgevoerd worden.
     \begin{listing}[H]
     \caption{Routes naar te beheren netwerken}
     \label{lst:route-networks}
@@ -257,7 +257,7 @@ Zoals de bovenvermelde cijfers tonen duurt één router handmatig configureren g
 Hoewel dit voor de configuratie van één toestel maar een tijdsbesparing is van 25,92\%, maken de tijdsbesparende kwaliteiten van automatische configuratie zich kenbaar in het configureren van meerdere toestellen.
 Met een gemiddelde handmatige configuratieduur van 14 minuten en 13 seconden, zou alle routers in de opstelling configureren gemiddeld 43 minuten en 10 seconden in beslag nemen. 
 Doordat Ansible toestellen parallel configureert, en niet één voor één zoals een netwerkbeheerder handmatig zou moeten doen, zie je de tijd die nodig is om de routers in de testopstelling te configureren drastisch verminderen. 
-Zo duurt de geautomatiseerde configuratie van alle routers in de testopstelling 12 minuten en 51 seconden, een 70,23\% tijdsbesparing vergeleken met handmatige configuratie.
+Zo duurt de geautomatiseerde configuratie van alle routers in de testopstelling gemiddeld 12 minuten en 51 seconden, een 70,23\% tijdsbesparing vergeleken met handmatige configuratie.
 \subsubsection{Switches}
 Voor de switches werden alleen de uplink switches getimed, aangezien zij wel een uitgebreide configuratie hebben en dus meer representatief zijn.
 Ook bij de switches bespaart configuratie met behulp van Ansible tijd. Zo duurt één switch configureren gemiddeld 32,36\% minder lang. Een kleine, maar toch voelbare tijdbesparing.
@@ -271,7 +271,7 @@ Het gebruik van modules, die bij ontwerp idempotent zijn, zorgt ervoor dat de pl
 Bij het herhalen van de playbooks kijken de modules naar de, op Cisco genoemde, running configuration en wordt alleen afwijkende configuratie aangepast.
 Bestaande configuratie die al overeenkomt met de gewenste configuratie wordt als 'ok' gemarkeerd door Ansible en waarna de volgende stap van het playbook begint.
 Enkel afwijkende configuratie wordt dus aangepast en wordt als 'changed' gemarkeerd.
-Hierdoor kan een netwerkbeheerder zien en volgen welke configuratie daadwerkelijk aangepast werd en daarmee ook bevestigen of gewenste aanpassingen effectief zijn uitgevoerd.
+Hierdoor kan een netwerkbeheerder nagaan en volgen welke configuratie daadwerkelijk aangepast werd en daarmee ook bevestigen of gewenste aanpassingen effectief zijn uitgevoerd.
 
 \subsection{Schaalbaarheid}
 Naast tijdsbesparing en consistentie speelt ook schaalbaarheid een belangrijke rol bij netwerkbeheer binnen een kmo-context.
@@ -292,7 +292,7 @@ Bij handmatige netwerkconfiguratie worden toestellen één voor één via de com
 Dit proces is foutgevoelig, aangezien kleine typfouten, vergeten commando's of inconsistent toegepaste configuraties kunnen leiden tot netwerkstoringen of beveiligingsproblemen.
 De evaluatie toont aan dat Ansible deze risico's aanzienlijk reduceert.
 Configuraties worden vastgelegd in playbooks en roles, waardoor dezelfde configuratie telkens op identieke wijze wordt toegepast. Dit elimineert vergeten commando's en inconsistente configuraties.
-Doordat configuraties niet manueel worden ingegeven, wordt het aantal typfouten ook aanzienlijk vermindert.
+Doordat configuraties niet manueel worden ingegeven, wordt het aantal typfouten ook aanzienlijk verminderd.
 \vspace{1em}
 
 Daarnaast zorgt het gebruik van gestructureerde variabelen en gestandaardiseerde modules voor consistente configuraties.
@@ -305,4 +305,4 @@ Dit maakt het eenvoudiger om fouten te detecteren, te analyseren en indien nodig
 In tegenstelling tot manuele configuratie is er bovendien steeds een duidelijk overzicht van de gewenste configuratiestatus, wat troubleshooting vereenvoudigt.
 \vspace{1em}
 
-Op basis van deze bevindingen kan worden geconcludeerd dat Ansible niet alleen efficiënter is dan manuele configuratie, maar ook bijdraagt aan het verminderen van menselijke fouten en het verhogen van de stabiliteit van de netwerkinfrastructuur.
+Op basis van deze bevindingen kan worden geconcludeerd dat Ansible niet alleen efficiënter is dan de manuele configuratie, maar ook bijdraagt aan het verminderen van menselijke fouten en het verhogen van de stabiliteit van de netwerkinfrastructuur.
