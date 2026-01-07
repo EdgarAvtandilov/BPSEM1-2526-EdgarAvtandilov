@@ -1,19 +1,23 @@
 vlans:
-  - { id: 10, name: HR }
-  - { id: 20, name: IT }
-  - { id: 30, name: Guest }
+  - { id: 10, name: Recepetie }
+  - { id: 20, name: HR }
+  - { id: 30, name: IT }
   - { id: 99, name: Management }
-trunk:
-  name: GigabitEthernet0/3
-  allowed: "10,20,30,99"
-access_ports:
-  - { name: GigabitEthernet0/0, vlan: 10 }
-  - { name: GigabitEthernet0/1, vlan: 20 }
-  - { name: GigabitEthernet0/2, vlan: 30 }
-
-ansible_terminal_length: 0
-ansible_terminal_width: 0
-ansible_connection: ansible.netcommon.network_cli
-ansible_network_os: cisco.ios.ios
-ansible_become: true
-ansible_become_method: enable
+basis_interfaces:
+  - name: GigabitEthernet0/0
+    description: Verdieping 1
+    mode: access
+    access_vlan: 10
+  - name: GigabitEthernet0/1
+    description: Verdieping 2
+    mode: access
+    access_vlan: 20
+  - name: GigabitEthernet0/2
+    description: Verdieping 3
+    mode: access
+    access_vlan: 30
+  - name: GigabitEthernet0/3
+    description: Uplink Trunk
+    mode: trunk
+    trunk_allowed_vlans: "1,10,20,30,99"
+    encapsulation: dot1q

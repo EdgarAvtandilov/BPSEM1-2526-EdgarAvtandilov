@@ -6,6 +6,7 @@
 
 - name: default config
   cisco.ios.ios_config:
+    match: line
     lines:
       - service password-encryption
       - service timestamps log datetime msec

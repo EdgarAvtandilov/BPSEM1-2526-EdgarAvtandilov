@@ -16,10 +16,10 @@ write mem
 
 per edge router:
 interface g0/0
-ip address 10.10.10.2 255.255.255.252
+ip address 10.10.x0.2 255.255.255.252
 no shutdown
 exit
-ip route 0.0.0.0 0.0.0.0 10.10.10.1
+ip route 0.0.0.0 0.0.0.0 10.10.x0.1
 exit
 
 # op host:
@@ -28,6 +28,9 @@ sudo route add -net 192.168.10.0/24 192.168.72.10
 sudo route add -net 192.168.20.0/24 192.168.72.10
 sudo route add -net 192.168.30.0/24 192.168.72.10
 
+sudo route add -net 192.168.x0.64/26 192.168.72.6
+sudo route add -net 192.168.x0.128/26 192.168.72.6
+sudo route add -net 192.168.x0.192/26 192.168.72.6
 
 # op switches 
 enable

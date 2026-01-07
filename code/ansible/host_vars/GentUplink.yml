@@ -1,14 +1,20 @@
-vlans:
-  - id: 10
-    name: Verdieping1_Gent
-  - id: 20
-    name: Verdieping2_Gent
-  - id: 30
-    name: Verdieping3_Gent
-  - id: 99
-    name: Management
-
 interfaces:
+  - name: Vlan10
+    description: Management SVI VLAN10
+    ipv4:
+      - address: 192.168.10.65/26
+  - name: Vlan20
+    description: Management SVI VLAN20
+    ipv4:
+      - address: 192.168.10.129/26
+  - name: Vlan30
+    description: Management SVI VLAN30
+    ipv4:
+      - address: 192.168.10.193/26
+  - name: Vlan99
+    description: Management SVI
+    ipv4:
+      - address: 192.168.10.5/26
   - name: GigabitEthernet0/0
     description: Verdieping 1 Gent
     mode: access
@@ -22,13 +28,10 @@ interfaces:
     mode: access
     access_vlan: 30
   - name: GigabitEthernet0/3
-    description: Uplink
+    description: Uplink Trunk
     mode: trunk
     trunk_allowed_vlans: "1,10,20,30,99"
-
-svi_interfaces:
-  - vlan: 99
-    ipv4: 192.168.10.5/26
+    encapsulation: dot1q
 
 static_routes:
   - address_families:

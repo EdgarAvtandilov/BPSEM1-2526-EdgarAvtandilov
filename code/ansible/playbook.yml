@@ -21,8 +21,8 @@
     - { role: ospf, when: "'routers' in group_names" }
     - { role: nat, when: role_nat | default(false) }
 
-- name: Configureer switches
-  serial: 12
+- name: Configureer uplink switches
+  serial: 5
   hosts: switches
   gather_facts: no
   strategy: free
@@ -30,8 +30,6 @@
     - base
     - { role: routes, when: static_routes is defined }
     - { role: switchports, when: "'switches' in group_names" }
-    - mgmt
-
 
 - name: Finalize (save/verify)
   hosts: all

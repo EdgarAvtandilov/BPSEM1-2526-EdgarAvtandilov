@@ -15,12 +15,12 @@
 \section{Inleiding}%
 \label{sec:inleiding}
 
-In de bedrijfswereld van vandaag staat connectiviteit en beschikbaarheid centraal. Binnen deze context kan een kleine configuratiefout al snel grote gevolgen met zich mee brengen. De manuele configuratie van meerdere netwerktoestellen is een foutgevoelig en tijdrovend proces, het kan namelijk uren duren om een geheel netwerk te configureren en elke configuratielijn is een nieuwe kans op een fout.
+In de bedrijfswereld van vandaag staat connectiviteit en beschikbaarheid centraal. Binnen deze context kan een kleine configuratiefout al snel grote gevolgen met zich mee brengen. De handmatige configuratie van meerdere netwerktoestellen is een foutgevoelig en tijdrovend proces, het kan namelijk uren duren om een geheel netwerk te configureren en elke configuratielijn is een nieuwe kans op een fout.
 Er is daarom nood aan een manier om het configuratieproces zowel tijdsbesparender te maken als een manier die alle toestellen consistent en foutloos kan configureren, een gepaste oplossing zou automatisatie zijn.
 Dit onderzoek zal deze uitdaging aanpakken door het configuratieproces te automatiseren aan de hand van Ansible. Ansible stelt ons in staat een single source of truth (SSoT) te hebben in de vorm van de Ansible controller, wat ervoor zorgt dat alle configuraties centraal beheerd, consistent toegepast en eenvoudig reproduceerbaar zijn over alle netwerktoestellen.
 Naast de voordelen van een SSoT, helpt Ansible ook het hele configuratieproces te versnellen door het een, deels, hands-off proces te maken.
 Deze elementen leiden naar de onderzoeksvraag \textit{in welke mate kan Ansible bijdragen aan een snellere, reproduceerbare en consistentere, schaalbare en foutloze netwerkconfiguratie binnen kmo's?}.
-Om deze vraag te beantwoorden zijn de volgende deelvragen geformuleerd, \textit{Hoeveel sneller is een netwerkconfiguratie aan de hand van ansible?}. \textit{Blijft configuratie consistent bij het heruitvoeren van de Ansible playbook}? \textit{Is configuratie aan de hand van Ansible even snel bij een klein netwerk als bij een middelgroot netwerk}? \textit{Worden minder fouten die connectiviteit verbreken gemaakt bij een geautomatiseerde configuratie vergeleken met de traditionele manier van configureren}?
+Om deze vraag te beantwoorden zijn de volgende deelvragen geformuleerd. \textit{Hoeveel sneller is een netwerkconfiguratie aan de hand van Ansible?} \textit{Blijft configuratie consistent bij het heruitvoeren van het Ansible playbook}? \textit{Is configuratie aan de hand van Ansible even snel bij een klein netwerk als bij een middelgroot netwerk}? \textit{Worden minder fouten die connectiviteit verbreken gemaakt bij een geautomatiseerde configuratie vergeleken met de traditionele manier van configureren}?
 Het doel van deze proof-of-concept is bewijzen dat Ansible een gepaste manier is om netwerkconfiguratie sneller, consistenter, reproduceerbaar en schaalbaar te maken.
 Dit onderzoek is gericht op kmo's die vaker beschikken over ICT-afdelingen met een beperkt aantal netwerkbeheerders die vaak beperkt zijn in hun tijd om een geheel netwerk, toestel per toestel, te (her)configureren.
 
@@ -35,9 +35,9 @@ Een netwerk dat 24/7 beschikbaar is staat hierin centraal, maar wat als er tijde
 Om bedrijfscontinuïteit te garanderen is er dus nood aan een manier om het netwerk consistent en foutloos te kunnen configureren.
 Waarom automatiseren? Netwerken zijn doorheen de jaren een stuk complexer geworden. Waar vroeger een kleine hoeveelheid toestellen lokaal beheerd werden, beschikken organisaties vandaag over tientallen of honderden netwerktoestellen op verschillende locaties. 
 Tientallen toestellen manueel configureren is niet alleen een tijdrovend proces, een reeks netwerktoestellen productieklaar maken kan al snel uren duren en het proces automatiseren kan dit verkorten naar slechts enkele minuten \autocite{Younes2024}.
-Naast de tijd die verloren wordt bij manuele configuratie is er nog een groot probleem: elke configuratielijn is een nieuwe kans op een menselijke fout. 
+Naast de tijd die verloren wordt bij handmatige configuratie is er nog een groot probleem: elke configuratielijn is een nieuwe kans op een menselijke fout. 
 Automatisatie is een mogelijke oplossing die al getoond heeft dat het aantal menselijke fouten die gemaakt worden aanzienlijk daalt \autocite{Diekmann_2015}.
-Hoewel de voordelen van automatisatie duidelijk en gekend zijn, blijven organisaties vaak vasthouden aan manuele configuratie. 
+Hoewel de voordelen van automatisatie duidelijk en gekend zijn, blijven organisaties vaak vasthouden aan handmatige configuratie. 
 De terughoudendheid van organisaties ligt voornamelijk bij een gebrek aan kennis over automatisatietools, angst voor verandering of de investering in tijd en middelen die nodig is om automatisatie te implementeren \autocite{EMAItential2021}.
 Een mogelijke manier om deze zorgen te overbruggen is een gebruiksvriendelijke, goed ondersteunde automatisatietool: Ansible.
 Ansible is een open-source automatisatietool, ontwikkeld door Red Hat, die gebruik maakt van een agentless architectuur.
@@ -85,7 +85,7 @@ Tijdens deze fase wordt gemeten hoeveel tijd nodig is voor configuratie met en z
 \subsection{Evaluatiefase}
 Tot slot wordt het proof-of-concept geëvalueerd op basis van meetbare criteria:
 \begin{itemize}
-  \item \textbf{Tijdswinst}: vergelijking van manuele versus geautomatiseerde configuratie.
+  \item \textbf{Tijdswinst}: vergelijking van handmatige versus geautomatiseerde configuratie.
   \item \textbf{Reproduceerbaarheid en Consistentie}: mogelijkheid om dezelfde configuratie meerdere keren zonder afwijkingen toe te passen.
   \item \textbf{Schaalbaarheid}: evaluatie van de prestaties bij meerdere netwerktoestellen.
   \item \textbf{Foutvermindering}: worden minder fouten gemaakt bij een configuratie met behulp van Ansible.
@@ -108,7 +108,7 @@ Deze combinatie van technologieën maakt het mogelijk om het volledige configura
 \section{Verwacht resultaat, conclusie}%
 \label{sec:verwachte_resultaten}
 
-Het doel van dit onderzoek is om aan te tonen dat netwerkconfiguratie automatiseren met Ansible leidt tot een snellere, consistentere en meer schaalbare manier van configureren waarbij minder fouten worden gemaakt in vergelijking met traditionele, manuele configuratie.
+Het doel van dit onderzoek is om aan te tonen dat netwerkconfiguratie automatiseren met Ansible leidt tot een snellere, consistentere en meer schaalbare manier van configureren waarbij minder fouten worden gemaakt in vergelijking met traditionele, handmatige configuratie.
 De verwachte resultaten worden opgesplitst in vier categorieën: tijdswinst, reproduceerbaarheid en consistentie, schaalbaarheid en foutvermindering.
 
 \subsection{Tijdswinst}

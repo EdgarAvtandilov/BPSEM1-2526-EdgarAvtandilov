@@ -21,30 +21,49 @@ De groeiende complexiteit van netwerken in combinatie met menselijke fouten vorm
 Op basis van deze inzichten werd een proof-of-concept uitgewerkt waarbij netwerkconfiguraties zowel manueel als geautomatiseerd werden uitgevoerd en met elkaar vergeleken.
 De evaluatie toont duidelijk aan dat netwerkautomatisatie met Ansible voordelen biedt ten opzichte van manuele configuratie.
 
-Wat betreft snelheid werd vastgesteld dat geautomatiseerde configuratie per individueel toestel een beperkte, maar merkbare tijdswinst oplevert.
-Deze tijdswinst wordt echter veel groter bij de gelijktijdige configuratie van meerdere toestellen, dankzij de parallelle uitvoering van configuratietaken. 
-Ansible kan meerdere routers en switches gelijktijdig configureren, wat resulteert in een totale tijdsbesparing tot 70\% ten opzichte van manuele configuratie.
-Dit maakt automatisatie bijzonder geschikt voor omgevingen waar regelmatig meerdere toestellen moeten worden aangepast of uitgerold.
+Hoeveel sneller is een netwerkconfiguratie aan de hand van Ansible?
+De configuratietijd van individuele routers vermindert tot 63,27\% bij individuele configuraties en tot 70,37\% bij het gelijktijdige configureren van meerdere netwerktoestellen.
+Wat betreft switches werd vastgesteld dat geautomatiseerde configuratie per individueel toestel een beperkte tijdswinst oplevert, men bespaart maar 4,17\% per individueel toestel en 21,38\% bij een parallelle configuratie van 3 switches.
+Deze resultaten tonen veel potentieel, maar zouden voor meer accurate resultaten in verdere onderzoeken getest moeten worden op fysieke netwerkapparatuur.
 \vspace{1em}
 
-Daarnaast bevestigt dit onderzoek dat Ansible een sterke meerwaarde biedt op het vlak van reproduceerbaarheid en consistentie.
-Dankzij het gebruik van idempotente modules en declaratieve configuraties kan dezelfde configuratie betrouwbaar opnieuw worden toegepast zonder ongewenste neveneffecten.
-Dit vermindert configuratiedrift en zorgt ervoor dat netwerktoestellen consistent blijven, zelfs na herhaalde wijzigingen of heruitvoeringen van playbooks.
+Is configuratie aan de hand van Ansible even snel bij een klein netwerk als bij een middelgroot netwerk? Deze vraag heeft een genuanceerd antwoord. 
+Hoewel één enkele router en meerdere routers parallel configureren beiden grote tijdsbesparingen met zich meebrengen, is dat bij switches niet het geval in de virtuele testomgeving. 
+In theorie zou de configuratietijd van één site en het gehele netwerk niet veel verschil met zich meebrengen. In realiteit waren de gemeten resultaten moeilijk te interpreteren.
+Meerdere nodes gelijktijdig aanzetten en configureren bracht een grote belasting op de CPU van de GNS3 VM met zich mee wat het hele proces vertraagde. 
+Bij één enkele site was de vertraging maar genoeg voor een 10\% tijdsbesparing, gemiddeld 18 minuten voor een geautomatiseerde configuratie vergeleken met 20 minuten voor een handmatige configuratie.
+Voor de configuratie van het hele netwerk kon er geen goede, representatieve meting genomen worden aangezien de zware CPU-belasting constant ssh time-outs met zich meebrengt.
+Om deze vraag concreet te kunnen beantwoorden zal de PoC op fysieke netwerkapparatuur uitgevoerd moeten worden waar CPU- en RAM-capaciteiten van een VM geen knelpunt zullen vormen.
 \vspace{1em}
 
-Ook op het vlak van schaalbaarheid biedt Ansible duidelijke voordelen.
-Waar de benodigde inspanning bij manuele configuratie lineair toeneemt met het aantal toestellen, laat Ansible toe om configuraties centraal te beheren en in één keer toe te passen op groepen van toestellen.
-Dankzij inventories, variabelen en roles kan het netwerk eenvoudig worden uitgebreid zonder dat bestaande configuraties herschreven moeten worden.
-Dit maakt de oplossing geschikt voor kmo's die verwachten dat hun netwerkinfrastructuur in de toekomst zal groeien.
+Blijft configuratie consistent bij het heruitvoeren van het Ansible playbook
+Playbooks kunnen meermaals toegpast worden op dezelfde toestellen zonder dat er configuratiedrift voorkomt.
+Het gebruik van idempotente modules en declaratieve configuraties zorgt ervoor dat dezelfde configuratie betrouwbaar opnieuw worden toegepast zonder ongewenste neveneffecten.
+Ansible laat met 'ok' en 'changed' ook weten wat er veranderd werd en voor nog meer controle kan de netwerkbeheerder verbose mode gebruiken om te zien wat de staat van het toestel voor en na een bepaalde task is.
+Dit alles vermindert configuratiedrift en zorgt ervoor dat netwerktoestellen consistent blijven, zelfs na herhaalde wijzigingen of heruitvoeringen van playbooks.
 \vspace{1em}
 
-Tot slot toont de evaluatie aan dat netwerkautomatisatie met Ansible leidt tot een duidelijke vermindering in configuratiefouten.
-Door manuele invoer te vervangen door gestructureerde en herbruikbare configuratiebestanden worden typfouten en inconsistenties zo goed als geëlimineerd.
-Daarnaast zorgen duidelijke rapportering en integratie met versiebeheer ervoor dat wijzigingen beter traceerbaar zijn en indien nodig eenvoudig kunnen worden teruggedraaid.
+Worden minder fouten die connectiviteit verbreken gemaakt bij een geautomatiseerde configuratie vergeleken met de traditionele manier van configureren?
+Tijdens het handmatig configureren werden gemiddeld 6 kleine typfouten gemaakt, maar zelden problemen die connectiviteitsproblemen met zich meebrengen. 
+Hoewel er in de Ansible tasks en playbooks ook typfouten gemaakt kunnen worden, geeft Ansible dit aan als dit een playbook onuitvoerbaar maakt.
+Men krijgt bijvoorbeeld foutmeldingen als modules niet bestaan, er fouten staan in de modules, een module een foute parameter heeft.
+Echter kan een fout IP-adres in de hostfile of variabelen wel connectiviteitsproblemen veroorzaken.
+Deze vraag heeft geen definitief antwoord aangezien fouten in zowel de CLI als in Ansible tasks een realistisch voorkomen hebben.
+Ansible in verbose modus, een optie die in staat stelt te zien wat de oude en nieuwe staat van een task is, geeft echter wel een makkelijkere manier om de fouten op te sporen en aan te passen waar nodig.
 \vspace{1em}
 
-Op basis van deze resultaten kan worden geconcludeerd dat netwerkautomatisatie met Ansible een haalbare en waardevolle oplossing is voor netwerkbeheer binnen een kmo-context.
-Hoewel er een kleine initiële leercurve en tijdsinvestering nodig is, wegen de voordelen die Ansible met zich meebrengt hier ruimschoots tegen op.
-Ansible vormt daarmee een goede basis voor een meer gestructureerde en toekomstgerichte aanpak van netwerkbeheer.
+Dit onderzoek toont aan dat netwerkautomatisatie met Ansible, ondanks een initiële leercurve en tijdsinvestering, duidelijke voordelen biedt op het vlak van snelheid, reproduceerbaarheid, schaalbaarheid, consistentie en foutvermindering binnen een kmo-context. 
+Tegelijkertijd hebben de resultaten uit dit onderzoek een grote beperking, namelijk het gebruik van een virtuele testomgeving. 
+Deze bachelorproef is geen eindpunt, maar eerder een vertrekpunt voor verder onderzoek binnen het domein van geautomatiseerd netwerkbeheer.
+\vspace{1em}
 
+Een eerste belangrijke horde voor vervolgonderzoek is het uitvoeren van dezelfde proof of concept op fysieke netwerkapparatuur. 
+De huidige metingen werden beïnvloed door CPU- en RAM-beperkingen van de GNS3-virtuele omgeving, wat leidde tot vertragingen en SSH time-outs bij parallelle configuraties. 
+Door het experiment te herhalen op echte routers en switches kan een realistischer beeld worden verkregen van de werkelijke tijdsbesparing en schaalbaarheid van Ansible in productieomgevingen.
+\vspace{1em}
 
+Zodra er een duidelijker beeld is op de resultaten van deze PoC op fysieke netwerkapparatuur kan er verder onderzoek worden gedaan binnen dit domein.
+Een andere interessante uitbreiding is het onderzoeken van geavanceerdere Ansible-functionaliteiten, zoals dynamische inventories, integratie met version control systemen (bijvoorbeeld Git), en het gebruik van CI/CD-pipelines voor netwerkconfiguratie. 
+Dit zou toelaten om netwerkbeheer verder te professionaliseren en te integreren binnen bredere DevOps- of NetDevOps-werkwijzen.
+
+Samenvattend toont deze bachelorproef het potentieel van Ansible voor geautomatiseerd netwerkbeheer, maar verder onderzoek is noodzakelijk om de huidige bevindingen te verfijnen, te valideren in realistische omgevingen en uit te breiden naar bredere toepassingsdomeinen.

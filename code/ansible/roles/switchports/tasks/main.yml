@@ -18,49 +18,36 @@
         description: "{{ item.description | default(omit) }}"
         enabled: true 
     state: merged
-  loop: "{{ interfaces | default([]) }}"
+  loop: "{{ basis_interfaces + interfaces | default([]) }}"
   loop_control:
     label: "{{ item.name }}"
-  when:
-    - item.mode is defined
 
+- name: Configure interfaces
+  vars:
+    access_interfaces: "{{ basis_interfaces | default([]) | selectattr('mode', 'defined') | selectattr('mode', 'equalto', 'access') | list }}"
+    trunk_interfaces: "{{ basis_interfaces | default([]) | selectattr('mode', 'defined') | selectattr('mode', 'equalto', 'trunk') | list }}"
+  
+  block:
+    - name: Configure SVIs
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            ipv4: "{{ item.ipv4 }}"
+        state: merged
+      loop: "{{ interfaces | default([]) }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when:
+        - item.ipv4 is defined
 
-- name: Configure access interfaces
-  cisco.ios.ios_l2_interfaces:
-    config:
-      - name: "{{ item.name }}"
-        mode: access
-        access:
-          vlan: "{{ item.access_vlan | int }}"
-    state: merged
-  loop: "{{ interfaces | default([]) }}"
-  loop_control:
-    label: "{{ item.name }}"
-  when:
-    - item.mode is defined
-    - item.mode == 'access'
-
-- name: Set trunk encapsulation dot1q (if required)
-  cisco.ios.ios_config:
-    parents: "interface {{ item.name }}"
-    lines:
-      - switchport trunk encapsulation dot1q
-  loop: "{{ interfaces | default([]) }}"
-  when:
-    - item.mode is defined
-    - item.mode == 'trunk'
-    
-- name: Configure trunk interfaces
-  cisco.ios.ios_l2_interfaces:
-    config:
-      - name: "{{ item.name }}"
-        mode: trunk
-        trunk:
-          allowed_vlans: "{{ item.trunk_allowed_vlans }}"
-    state: merged
-  loop: "{{ interfaces | default([]) }}"
-  loop_control:
-    label: "{{ item.name }}"
-  when:
-    - item.mode is defined
-    - item.mode == 'trunk'
+    - name: Configure interfaces
+      cisco.ios.ios_l2_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            mode: "{{ item.mode }}"
+            access: "{{ {'vlan': item.access_vlan | int} if item.mode == 'access' else omit }}"
+            trunk: "{{ {'allowed_vlans': item.trunk_allowed_vlans, 'encapsulation': item.trunk_encapsulation | default(omit)} if item.mode == 'trunk' else omit }}"
+        state: merged
+      loop: "{{ access_interfaces + trunk_interfaces }}"
+      loop_control:
+        label: "{{ item.name }}"
