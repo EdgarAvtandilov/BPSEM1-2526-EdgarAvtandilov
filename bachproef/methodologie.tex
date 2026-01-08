@@ -138,7 +138,22 @@ Voor de beschreven basisconfiguratie moeten volgende commando's handmatig uitgev
     \end{minted}
     \end{listing}
 Zodra er routes van de Ansible-controller naar de nodes bestaan, de netwerktoestellen een bereikbaar IP-adres hebben en SSH is opgezet, kan de netwerkbeheerder het playbook uitvoeren.
-
+Hiervoor moet de netwerkbeheerder de 'ansible' map openen en onderstaande commando's uitvoeren. De collections installeren moet maar één keer uitgevoerd worden, dit voor het playbook voor het eerst is uitgevoerd op de Ansible controller. 
+Daarna staan de collecties, tot ze verwijderd worden, op de Ansible controller.
+    \begin{listing}[H]
+    \caption{Collections installeren}
+    \label{lst:install-collections}
+    \begin{minted}{text}   
+        ansible-galaxy collection install -r requirements.yml
+    \end{minted}
+    \end{listing}
+    \begin{listing}[H]
+    \caption{Uitvoeren playbook}
+    \label{lst:run-playbook}
+    \begin{minted}{text}   
+        ansible-playbook -i hosts.yml playbook.yml 
+    \end{minted}
+    \end{listing}
 \subsection{Playbooks}
 \subsubsection{Structuur van de Ansible-omgeving}
 Voor de implementatie van de netwerkautomatisatie werd een gestructureerde Ansible-omgeving opgezet. De nadruk ligt hierbij op modulariteit, herbruikbaarheid en onderhoudbaarheid.
@@ -275,7 +290,7 @@ Ook hier ziet men een grotere tijdsbesparing bij het parallel configureren van m
 \subsection{Reproduceerbaarheid en consistentie}
 Dit onderzoek toont aan dat Ansible zorgt voor betere reproduceerbaarheid en dat configuratie consistent blijft bij het heruitvoeren van het Ansible playbook.
 Het gebruik van modules, die bij ontwerp idempotent zijn, zorgt ervoor dat de playbooks meermaals herhaald kunnen worden op de netwerktoestellen.
-Bij het herhalen van de playbooks vergelijken modules de, op Cisco genoemde, running configuration met de gewenste configuratie en wordt alleen afwijkende configuratie aangepast.
+Bij het herhalen van de playbooks vergelijken de modules de op Cisco-toestellen aanwezige running configuration met de gewenste configuratie, waarbij enkel de afwijkende configuratie wordt aangepast.
 Bestaande configuratie die al overeenkomt met de gewenste configuratie wordt als 'ok' gemarkeerd door Ansible, waarna de volgende stap van het playbook begint.
 Enkel afwijkende configuratie wordt dus aangepast en wordt als 'changed' gemarkeerd.
 Hierdoor kan een netwerkbeheerder nagaan en volgen welke configuratie daadwerkelijk aangepast werd en daarmee ook bevestigen of gewenste aanpassingen effectief zijn uitgevoerd.

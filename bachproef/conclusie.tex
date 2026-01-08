@@ -14,7 +14,7 @@
 % Heeft het onderzoek geleid tot nieuwe vragen die uitnodigen tot verder 
 %onderzoek?
 
-In deze bachelorproef werd onderzocht in welke mate netwerkautomatisatie met behulp van Ansible kan bijdragen aan snellere, reproduceerbare en consistente, schaalbare en foutloze netwerkconfiguratie binnen een kmo-context.
+In deze bachelorproef werd onderzocht in welke mate netwerkautomatisatie met behulp van Ansible kan bijdragen aan snellere, reproduceerbare, consistente, schaalbare en foutloze netwerkconfiguratie binnen een kmo-context.
 Uit de literatuurstudie bleek dat traditionele, manuele netwerkconfiguratie steeds moeilijker schaalbaar is door de toenemende complexiteit van netwerken en het groeiende aantal netwerktoestellen.
 De groeiende complexiteit van netwerken in combinatie met menselijke fouten vormt een belangrijke oorzaak van netwerkstoringen en downtime.
 
@@ -37,9 +37,9 @@ Voor de configuratie van het hele netwerk kon er geen goede, representatieve met
 Om deze vraag concreet te kunnen beantwoorden zal de PoC op fysieke netwerkapparatuur uitgevoerd moeten worden waar CPU- en RAM-capaciteiten van een VM geen knelpunt zullen vormen.
 \vspace{1em}
 
-Blijft configuratie consistent bij het heruitvoeren van het Ansible playbook
-Playbooks kunnen meermaals toegpast worden op dezelfde toestellen zonder dat er configuratiedrift voorkomt.
-Het gebruik van idempotente modules en declaratieve configuraties zorgt ervoor dat dezelfde configuratie betrouwbaar opnieuw worden toegepast zonder ongewenste neveneffecten.
+Blijft configuratie consistent bij het heruitvoeren van het Ansible playbook?
+Playbooks kunnen meermaals toegepast worden op dezelfde toestellen zonder dat er configuratiedrift voorkomt.
+Het gebruik van idempotente modules en declaratieve configuraties zorgt ervoor dat dezelfde configuratie betrouwbaar opnieuw kan worden toegepast zonder ongewenste neveneffecten.
 Ansible laat met 'ok' en 'changed' ook weten wat er veranderd werd en voor nog meer controle kan de netwerkbeheerder verbose mode gebruiken om te zien wat de staat van het toestel voor en na een bepaalde task is.
 Dit alles vermindert configuratiedrift en zorgt ervoor dat netwerktoestellen consistent blijven, zelfs na herhaalde wijzigingen of heruitvoeringen van playbooks.
 \vspace{1em}
@@ -62,6 +62,18 @@ Een eerste belangrijke horde voor vervolgonderzoek is het uitvoeren van dezelfde
 De huidige metingen werden beïnvloed door CPU- en RAM-beperkingen van de GNS3-virtuele omgeving, wat leidde tot vertragingen en SSH time-outs bij parallelle configuraties. 
 Door het experiment te herhalen op echte routers en switches kan een realistischer beeld worden verkregen van de werkelijke tijdsbesparing en schaalbaarheid van Ansible in productieomgevingen.
 \vspace{1em}
+
+Dit onderzoek vertrok vanuit de hoofdvraag: in welke mate kan Ansible bijdragen aan een snellere, reproduceerbare, consistente, schaalbare en foutloze netwerkconfiguratie?
+Op basis van de literatuurstudie en de uitgewerkte proof-of-concept kan worden geconcludeerd dat Ansible hierin een duidelijke meerwaarde biedt.
+Ondanks de beperkingen van de virtuele testomgeving werd een aanzienlijke tijdswinst vastgesteld bij het configureren van netwerktoestellen. 
+De meest opvallende tijdsbesparingen werden vastgesteld bij het configureren van routers en bij parallelle configuraties van een beperkt aantal toestellen. 
+Wanneer meerdere netwerktoestellen gelijktijdig actief waren, vormden de CPU- en RAM-capaciteiten van de virtuele omgeving een knelpunt, hierdoor konnen er geen juist te interpreteren metingen genomen worden voor de configuratie van het hele bedrijfsnetwerk.
+Naast snelheid blijkt Ansible ook sterk te scoren op het vlak van reproduceerbaarheid en consistentie. Het gebruik van idempotente modules en declaratieve configuraties maakt het mogelijk om playbooks herhaaldelijk toe te passen met een consistente eindstaat als resultaat.
+De mogelijkheid om tijdens de uitvoering te volgen welke wijzigingen effectief worden doorgevoerd, draagt bij aan het controleren van consistentie.
+Ook op het vlak van schaalbaarheid toont Ansible zijn potentieel. Het gebruik van groepsvariabelen, herbruikbare rollen en gestructureerde inventarisbestanden maakt nieuwe netwerktoestellen toevoegen relatief eenvoudig.
+Hoewel het volledige potentieel van schaalbaarheid niet uitgebreid getest kon worden op het vlak van snelheid door de beperkte testomgeving.
+Tot slot draagt Ansible bij aan foutvermindering door vroegtijdige detectie van syntaxfouten en ongeldige moduleparameters, hierdoor worden foutieve configuraties niet toegepast. 
+Hoewel typfouten in variabelen mogelijk blijven, biedt Ansible betere ondersteuning voor foutopsporing dan traditionele manuele configuratie.
 
 Zodra er een duidelijker beeld is op de resultaten van deze PoC op fysieke netwerkapparatuur kan er verder onderzoek worden gedaan binnen dit domein.
 Een andere interessante uitbreiding is het onderzoeken van geavanceerdere Ansible-functionaliteiten, zoals dynamische inventories, integratie met version control systemen (bijvoorbeeld Git), en het gebruik van CI/CD-pipelines voor netwerkconfiguratie. 
