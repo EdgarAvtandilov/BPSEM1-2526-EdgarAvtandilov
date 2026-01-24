@@ -6,6 +6,7 @@
 
 \documentclass[a0,portrait]{hogent-poster}
 
+\usepackage{float}
 % Info over de opleiding
 \course{Bachelorproef}
 \studyprogramme{toegepaste informatica}
@@ -22,7 +23,7 @@
 % Indien ingevuld, wordt deze informatie toegevoegd aan het einde van de
 % abstract. Zet in commentaar als je dit niet wilt.
 \specialisation{Systeem- en Netwerkbeheer}
-\keywords{Lambda-calculus, Scheme}
+\keywords{Netwerkbeheer, Ansible, Cisco, netwerkconfiguratie, automatisatie, netwerken}
 \projectrepo{https://github.com/EdgarAvtandilov/BPSEM1-2526-EdgarAvtandilov}
 
 \begin{document}
@@ -30,56 +31,101 @@
 \maketitle
 
 \begin{abstract}
-It's only a model.
-You don't vote for kings. Who's that then? We found them. Ni! Ni! Ni! Ni!
-The nose? On second thoughts, let's not go there. It is a silly place. Bloody Peasant! And the hat. She's a witch! Where'd you get the coconuts?
+Deze bachelorproef onderzoekt hoe netwerkautomatisatie met Ansible kan bijdragen aan efficiënter netwerkbeheer binnen een kmo-context.
+In een proof-of-concept werden routers en switches zowel manueel als geautomatiseerd geconfigureerd en met elkaar vergeleken.
+
+\medskip
+\textbf{Belangrijkste resultaten:}
+\begin{itemize}
+    \item Tot \textbf{70\% snellere configuratie} bij automatisatie
+    \item Consistente en reproduceerbare configuraties via idempotente playbooks
+    \item Betere schaalbaarheid dankzij inventories, variabelen en herbruikbare roles
+    \item Minder configuratiefouten door het vermijden van manuele invoer
+\end{itemize}
+
+De resultaten tonen aan dat Ansible een realistische, toekomstgerichte oplossing is voor netwerkautomatisatie in kmo's.
 \end{abstract}
 
-\begin{multicols}{2} % This is how many columns your poster will be broken into, a portrait poster is generally split into 2 columns
+\begin{multicols}{2}
 
-\section{Introductie}
+\section{Inleiding en probleemstelling}
 
-Be quiet! Found them? In Mercia?! The coconut's tropical! But you are dressed as one… Well, what do you want? Knights of Ni, we are but simple travelers who seek the enchanter who lives beyond these woods.
+Netwerkinfrastructuur is cruciaal voor moderne organisaties, maar worden vaak nog manueel beheerd.
+Dit leidt tot:
+\begin{itemize}
+    \item Tijdrovende configuraties
+    \item Foutgevoelige manuele commando's
+    \item Beperkte schaalbaarheid
+    \item Inconsistente configuraties
+\end{itemize}
 
-Well, what do you want? It's only a model. Camelot! We found them. We shall say `Ni' again to you, if you do not appease us.
+\textbf{Onderzoeksvraag:}\\
+In welke mate kan Ansible bijdragen aan een snellere, reproduceerbare, consistente, schaalbare en foutloze netwerkconfiguratie binnen een kmo-context?
 
-The nose? Shut up! Burn her! I am your king. You don't vote for kings.
+\textbf{Deelvragen:}
+\begin{itemize}
+    \item Hoeveel sneller is een netwerkconfiguratie aan de hand van ansible?
+    \item Blijft configuratie consistent bij het heruitvoeren van de Ansible playbook?
+    \item Is configuratie aan de hand van Ansible even snel bij een klein netwerk als bij een middelgroot netwerk?
+    \item Worden minder fouten die connectiviteit verbreken gemaakt bij een geautomatiseerde configuratie vergeleken met de traditionele manier van configureren?
+\end{itemize}
 
-You can't expect to wield supreme power just `cause some watery tart threw a sword at you! Well, we did do the nose. I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave before I am forced to taunt you a second time!
+\section{Proof-of-concept}
 
-Why do you think that she is a witch? We want a shrubbery!! I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave before I am forced to taunt you a second time!
+Een proof-of-concept werd uitgewerkt om netwerkautomatisatie met Ansible praktisch te evalueren.
 
-\section{Experimenten}
+\textbf{Testomgeving:}
+\begin{itemize}
+    \item Drie sites: Gent, Antwerpen en Brussel
+    \item Per site: site-router, uplink switch en access switches
+    \item Centrale company router
+    \item Gescheiden VLAN's en management-VLAN
+\end{itemize}
 
-A newt? Camelot! Why? No, no, no! Yes, yes. A bit. But she's got a wart.
+\textbf{Technologieën:}
+\begin{itemize}
+    \item Cisco routers en switches
+    \item Ansible playbooks en roles voor:
+    \begin{itemize}
+        \item Basisconfiguratie
+        \item VLAN- en poortconfiguratie
+        \item NAT
+        \item Routing
+        \item SSH-managementtoegang
+    \end{itemize}
+\end{itemize}
 
-Shut up! I dunno. Must be a king. Who's that then? Look, my liege! On second thoughts, let's not go there. It is a silly place.
+Manuele en geautomatiseerde configuraties werden met elkaar vergeleken op snelheid, consistentie en foutgevoeligheid.
 
-Shut up! Will you shut up?! No, no, no! Yes, yes. A bit. But she's got a wart. He hasn't got shit all over him. It's only a model. It's only a model.
+\section{Topologie PoC}
 
-Bring her forward! I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave 
-
-\section{Sectie met figuur}
-
-De {\LaTeX} figure-omgeving bepaalt zelf waar een afbeelding komt en dat is meestal niet op de plek in de tekst waar de figure-omgeving gedefinieerd wordt. Als je wilt forceren dat afbeeldingen toch in de flow van de tekst blijven, dan kan je dat zoals hieronder:
-
-\begin{center}
-  \captionsetup{type=figure}
-  \includegraphics[width=1.0\linewidth]{grail}
-  \captionof{figure}{He hasn't got shit all over him. The nose? Where'd you get the coconuts? What do you mean? We shall say `Ni' again to you, if you do not appease us}
-\end{center}
-
-Let er wel op dat dit tot problemen met bladschikking kan leiden.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{../graphics/topologie.png}
+  \caption{Netwerktopologie van de testomgeving}
+\end{figure}
 
 \section{Conclusies}
 
-Don't underestimate the Force. Oh God, my uncle. How am I ever gonna explain this? I suggest you try it again, Luke. This time, let go your conscious self and act on instinct. Don't be too proud of this technological terror you've constructed. The ability to destroy a planet is insignificant next to the power of the Force.
+De resultaten tonen duidelijke voordelen van netwerkautomatisatie met Ansible:
+\begin{itemize}
+    \item \textbf{Tot 70\% tijdswinst} bij configuratie van meerdere toestellen
+    \item Consistente en reproduceerbare configuraties
+    \item Betere schaalbaarheid bij groeiende netwerken
+    \item Minder kans op configuratiefouten
+\end{itemize}
+
+Een beperking van het onderzoek is het gebruik van een virtuele testomgeving.
+Verder onderzoek op fysieke netwerkapparatuur is aangewezen.
 
 \section{Toekomstig onderzoek}
+Beginnen met PoC testen op fysieke netwerkapparatuur
 
-I care. So, what do you think of her, Han? No! Alderaan is peaceful. We have no weapons. You can't possibly… I have traced the Rebel spies to her. Now she is my only link to finding their secret base.
-
-Kid, I've flown from one side of this galaxy to the other. I've seen a lot of strange stuff, but I've never seen anything to make me believe there's one all-powerful Force controlling everything. There's no mystical energy field that controls my destiny. It's all a lot of simple tricks and nonsense. You are a part of the Rebel Alliance and a traitor! Take her away! 
+Mogelijke uitbreidingen:
+\begin{itemize}
+    \item Gebruik van dynamische inventories
+    \item Integratie met Git en CI/CD-pipelines
+\end{itemize}
 
 \end{multicols}
 \end{document}
